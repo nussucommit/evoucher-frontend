@@ -2,6 +2,13 @@ const path = require("path")
 
 module.exports = {
   stories: ["../src/@commitUI/components/**/*.stories.@(js|jsx|ts|tsx)"],
+  refs: {
+    "design-system": {
+      title: "commIT Design",
+      //👇 The url provided by Chromatic when it was deployed
+      url: "https://master--60ef059be068fa0039661047.chromatic.com",
+    },
+  },
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
