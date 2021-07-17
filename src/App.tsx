@@ -11,17 +11,25 @@ import "./App.css"
 import Pages from "pages"
 
 function App() {
-  const [isAuth, setIsAuth] = useState(Boolean(getToken()))
+  const [isAuth, setIsAuth] = useState<"ADMIN" | "USER" | undefined>(
+    (Boolean(getToken()) && getToken()?.authType) || undefined
+  )
 
-  const login = useCallback((token: Token, next?: Routes) => {
-    saveToken(token)
+  const userLogin = useCallback((token: Token, next?: Routes) => {
+    saveToken(token, "USER")
     session.removeItem(SessionStorageKey.sessionTimedOut)
-    setIsAuth(true)
+    setIsAuth("USER")
+  }, [])
+
+  const adminLogin = useCallback((token: Token, next?: Routes) => {
+    saveToken(token, "ADMIN")
+    session.removeItem(SessionStorageKey.sessionTimedOut)
+    setIsAuth("ADMIN")
   }, [])
 
   const logout = useCallback(() => {
     deleteToken()
-    setIsAuth(false)
+    setIsAuth(undefined)
   }, [])
 
   return (
@@ -29,7 +37,8 @@ function App() {
       <AuthContext.Provider
         value={{
           isAuth,
-          login,
+          userLogin,
+          adminLogin,
           logout,
         }}
       >

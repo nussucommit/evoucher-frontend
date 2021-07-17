@@ -1,2 +1,3 @@
-export { default as PublicRoute } from "./PublicRoute";
-export { default as PrivateRoute } from "./PrivateRouteLayoutSwitch";
+export { default as PublicRoute } from "./PublicRoute"
+export { default as PrivateRoute } from "./PrivateRoute"
+export { default as AdminRoute } from "./AdminRoute"

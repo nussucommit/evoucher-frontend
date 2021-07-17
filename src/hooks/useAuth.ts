@@ -1,18 +1,20 @@
-import { createContext, useContext } from "react";
-import { Routes } from "constants/routes";
+import { createContext, useContext } from "react"
+import { Routes } from "constants/routes"
 
 const defaultValue: {
-    isAuth: boolean;
-    login: (token: Token, next?: Routes) => void;
-    logout: () => void;
+  isAuth: "USER" | "ADMIN" | undefined
+  userLogin: (token: Token, next?: Routes) => void
+  adminLogin: (token: Token, next?: Routes) => void
+  logout: () => void
 } = {
-    isAuth: false,
-    login: () => undefined,
-    logout: () => undefined,
-};
+  isAuth: undefined,
+  userLogin: () => undefined,
+  adminLogin: () => undefined,
+  logout: () => undefined,
+}
 
-export const AuthContext = createContext(defaultValue);
+export const AuthContext = createContext(defaultValue)
 
-const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext)
 
-export default useAuth;
+export default useAuth

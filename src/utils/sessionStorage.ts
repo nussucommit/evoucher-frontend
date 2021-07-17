@@ -1,7 +1,8 @@
 export enum SessionStorageKey {
-  access = 'access',
-  refresh = 'refresh',
-  sessionTimedOut = 'sessionTimedOut',
+  access = "access",
+  refresh = "refresh",
+  sessionTimedOut = "sessionTimedOut",
+  authType = "authType",
 }
 
 const getItem = (key: SessionStorageKey) => {
