@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,MAAM,CAAC;EACL,MAAM,EAAE,kBAAkB,CAAC,CAAC;CAC7B",
+    "sources": [
+        "Table.module.scss"
+    ],
+    "names": [],
+    "file": "Table.module.css"
+}

@@ -1,0 +1,10 @@
+.screen {
+  text-align: center;
+
+  .table {
+    margin: var(--spacing-base) auto;
+    width: 95%;
+
+    border-radius: var(--border-radius);
+  }
+}
