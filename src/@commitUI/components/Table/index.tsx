@@ -36,6 +36,7 @@ export type Props<DataType extends {}> = TableProps & {
   totalPage?: number
   hasNextPage?: boolean
   hasPrevPage?: boolean
+  onRowClick?: (id: number) => void
 }
 
 export const Table = <DataType extends {}>({
@@ -48,6 +49,7 @@ export const Table = <DataType extends {}>({
   totalPage,
   hasNextPage,
   hasPrevPage,
+  onRowClick,
   ...tableProps
 }: Props<DataType>) => {
   const {
@@ -111,7 +113,12 @@ export const Table = <DataType extends {}>({
           {page.map((row, i) => {
             prepareRow(row)
             return (
-              <Tr {...row.getRowProps()}>
+              <Tr
+                {...row.getRowProps()}
+                onClick={() =>
+                  onRowClick && onRowClick(Number(row.cells[0].value))
+                }
+              >
                 {row.cells.map((cell) => (
                   <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
                 ))}
