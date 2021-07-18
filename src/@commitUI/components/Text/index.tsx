@@ -25,6 +25,7 @@ export type Props = {
     | "warning"
     | "white"
   uppercase?: boolean
+  span?: boolean
 }
 
 export const Text = (props: Props) => {
@@ -39,6 +40,7 @@ export const Text = (props: Props) => {
     semibold,
     type,
     uppercase,
+    span,
   } = props
   const cn = cx(
     styles.text,
@@ -67,5 +69,6 @@ export const Text = (props: Props) => {
     },
     className
   )
+  if (span) return <span className={cn}>{children}</span>
   return <p className={cn}>{children}</p>
 }

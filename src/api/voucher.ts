@@ -1,5 +1,4 @@
 import useRequest, { Config } from "./swr"
-import request from "./request"
 
 export const useVouchers = (
   email: string,
