@@ -46,3 +46,5 @@ interface OrganizationVouchers {
   previous: string
   results: AdminVoucher[]
 }
+
+type VoucherType = "Food" | "Sport" | "Fashion" | "Others"
