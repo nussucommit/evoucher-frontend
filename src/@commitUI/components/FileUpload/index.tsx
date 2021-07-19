@@ -3,6 +3,7 @@ import { useDropzone, FileWithPath } from "react-dropzone"
 import cx from "classnames"
 
 import { Text } from "../Text"
+import { Button } from "../Button"
 
 import styles from "./FileUpload.module.css"
 
@@ -64,11 +65,27 @@ export const FileUpload = ({
     className
   )
 
+  const removeFile = () => {
+    acceptedFiles.splice(0, 1) // remove the file from the array
+    setFile("")
+  }
+
   return (
-    <div {...getRootProps({ className: cn })}>
-      <input {...getInputProps()} />
-      <Text>{text}</Text>
-      {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
-    </div>
+    <>
+      <div {...getRootProps({ className: cn })}>
+        <input {...getInputProps()} />
+        {acceptedFiles.length ? (
+          <Text>{acceptedFiles[0].name}</Text>
+        ) : (
+          <Text>{text}</Text>
+        )}
+        {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
+      </div>
+      {acceptedFiles.length ? (
+        <Button type="text" onClick={removeFile}>
+          Remove
+        </Button>
+      ) : null}
+    </>
   )
 }

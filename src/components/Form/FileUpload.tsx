@@ -12,6 +12,7 @@ export const FileUpload = ({ name, ...props }: Props) => {
   const { setValue } = helper
 
   const setFile = (base64?: string) => setValue(base64)
+  console.log(field?.value)
 
   return (
     <BaseFileUpload
