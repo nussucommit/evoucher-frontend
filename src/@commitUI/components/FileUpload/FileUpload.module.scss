@@ -3,7 +3,7 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
-  padding: 50px;
+  padding: 20px;
   border-width: 2px;
   border-radius: 8px;
   border-color: #eeeeee;
@@ -12,7 +12,10 @@
   color: #bdbdbd;
   outline: none;
   transition: border 0.24s ease-in-out;
-  margin: 16px;
+
+  .text {
+    width: 90%;
+  }
 }
 
 .active {

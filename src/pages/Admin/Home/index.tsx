@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Formik, Form, FormikHelpers } from "formik"
+import React, { useEffect, useState } from "react"
+import { Formik, Form, FormikHelpers, useFormikContext } from "formik"
 import * as yup from "yup"
 import { Column } from "react-table"
 
@@ -10,10 +10,11 @@ import useAuth from "hooks/useAuth"
 import usePagination from "hooks/usePagination"
 import useModal from "hooks/useModal"
 
-import { Button, Table, Modal } from "@commitUI"
-import { FileUpload } from "components/Form"
+import { Button, Table, Modal, ModalProps } from "@commitUI"
+import { FileUpload, Input } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
+import { displayDate, rawDate } from "utils/date"
 
 interface Values {
   availableDate: string
@@ -23,6 +24,16 @@ interface Values {
   description: string
   type: VoucherType | string
   image: string
+}
+
+const initialValues: Values = {
+  availableDate: "",
+  expiryDate: "",
+  name: "",
+  organization: "",
+  description: "",
+  type: "Others",
+  image: "",
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -36,12 +47,12 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
 })
 
 const Home = () => {
-  const [selected, setSelected] = useState<number>()
+  const [selected, setSelected] = useState<AdminVoucher>()
   const { logout: localLogout } = useAuth()
   const { isOpen, onToggle } = useModal()
   const { page, setPage, setPerPage, perPage } = usePagination()
   const {
-    data = { count: 0, next: "", previous: "", results: [] },
+    data: vouchers = { count: 0, next: "", previous: "", results: [] },
     revalidate,
     isValidating,
   } = useOrganizationVouchers({
@@ -85,46 +96,32 @@ const Home = () => {
   )
 
   const handleSelect = (id: number) => {
-    setSelected(id)
+    setSelected(vouchers.results.find((voucher) => voucher.id === id))
     onToggle()
   }
 
-  const initialValues: Values = {
-    availableDate: "",
-    expiryDate: "",
-    name: "",
-    organization: "",
-    description: "",
-    type: "Others",
-    image: "",
+  const handleSubmit = (values: Values) => {
+    // rawDate(values.availableDate)
+    // rawDate(values.expiryDate)
   }
 
   return (
     <>
       <div className={styles.screen}>
         <h1>Admin Home Page</h1>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={() => console.log("submit")}
-        >
-          <Form>
-            <FileUpload text="Upload File" type="image" name="image" />
-          </Form>
-        </Formik>
-        {/* <Table
-          data={data.results as AdminVoucher[]}
+        <Table
+          data={vouchers.results as AdminVoucher[]}
           columns={columns}
           currentPage={page}
           setPage={setPage}
           perPage={perPage}
           setPerPage={setPerPage}
-          totalPage={Math.ceil(data?.count / perPage)}
-          hasNextPage={Boolean(data?.next)}
-          hasPrevPage={Boolean(data?.previous)}
+          totalPage={Math.ceil(vouchers?.count / perPage)}
+          hasNextPage={Boolean(vouchers?.next)}
+          hasPrevPage={Boolean(vouchers?.previous)}
           onRowClick={handleSelect}
           className={styles.table}
-        /> */}
+        />
 
         <Button
           onClick={() => {
@@ -136,10 +133,70 @@ const Home = () => {
           Log out
         </Button>
       </div>
-      <Modal isOpen={isOpen} onClose={onToggle}>
-        <p>{selected}</p>
-      </Modal>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={() => console.log("submit")}
+        enableReinitialize
+      >
+        <Form>
+          <AdminVoucherModal
+            voucher={selected}
+            isOpen={isOpen}
+            onClose={onToggle}
+          />
+        </Form>
+      </Formik>
     </>
+  )
+}
+
+type AdminVoucherModalProps = Omit<ModalProps, "children"> & {
+  voucher?: AdminVoucher
+}
+
+const AdminVoucherModal = ({
+  voucher,
+  isOpen,
+  onClose,
+}: AdminVoucherModalProps) => {
+  const { setValues, submitForm, values } = useFormikContext<Values>()
+  useEffect(() => {
+    setValues({
+      availableDate: displayDate(voucher?.available_date || ""),
+      expiryDate: displayDate(voucher?.expiry_date || ""),
+      name: voucher?.name || "",
+      organization: voucher?.organization || "",
+      description: voucher?.description || "",
+      type: voucher?.voucher_type || "",
+      image: voucher?.image || "",
+    })
+  }, [voucher])
+
+  return (
+    <Modal title="Edit Voucher" isOpen={isOpen} onClose={onClose}>
+      <p>{voucher?.name}</p>
+      <p>{rawDate(displayDate(values?.availableDate || "")).toJSON()}</p>
+
+      <Input
+        name="availableDate"
+        label="Available Date (DD/MM/YYYY)"
+        className={styles.input}
+      />
+
+      <Input
+        name="expiryDate"
+        label="Expiry Date (DD/MM/YYYY)"
+        className={styles.input}
+      />
+
+      <FileUpload
+        text="Upload File"
+        type="image"
+        name="image"
+        className={styles.upload}
+      />
+    </Modal>
   )
 }
 

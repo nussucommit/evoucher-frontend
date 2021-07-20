@@ -7,4 +7,12 @@
   width: 95%;
   border-radius: var(--border-radius);
 }
+
+.screen .upload {
+  margin: 16px;
+}
+
+.input {
+  margin-bottom: var(--spacing-base);
+}
 /*# sourceMappingURL=AdminHome.module.css.map */

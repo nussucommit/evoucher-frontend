@@ -77,7 +77,10 @@ export const FileUpload = ({
         {acceptedFiles.length ? (
           <Text>{acceptedFiles[0].name}</Text>
         ) : (
-          <Text>{text}</Text>
+          <>
+            {text.includes("https") && <img src={text} />}
+            <Text className={styles.text}>{text}</Text>
+          </>
         )}
         {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
       </div>

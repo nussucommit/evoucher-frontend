@@ -10,13 +10,12 @@ export const FileUpload = ({ name, ...props }: Props) => {
   const [field, meta, helper] = useField(name)
   const { touched, error } = meta
   const { setValue } = helper
-
   const setFile = (base64?: string) => setValue(base64)
-  console.log(field?.value)
 
   return (
     <BaseFileUpload
       {...props}
+      text={field.value}
       setFile={setFile}
       error={touched && error ? error : ""}
     />
