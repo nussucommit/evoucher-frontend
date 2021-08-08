@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink as Link } from "react-router-dom";
+import cx from 'classnames'
 
 import styles from "./Navbar.module.css";
 
@@ -7,12 +8,13 @@ interface NavProps {
     children: React.ReactNode;
     color?: string;
     backgroundColor?: string;
+    className?: string
 }
 
-export const Nav = ({ children, backgroundColor, color }: NavProps) => {
+export const Nav = ({ children, backgroundColor, className }: NavProps) => {
     return (
         <nav
-            className={styles.nav}
+            className={cx(styles.nav, className)}
             style={{ backgroundColor: backgroundColor as string }}
         >
             {children}

@@ -1,34 +1,20 @@
-.hamburger {
-  display: none;
-  color: #fff;
-  padding: 0;
-  margin: 0;
-  margin-right: 16px;
-}
-
-.navmenu {
+.nav {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
-.btn {
-  margin: var(--spacing-sm);
+.align {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-@media screen and (max-width: 768px) {
-  .hamburger {
-    display: block;
-    z-index: 1001;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-  }
-  .navmenu {
-    display: none;
-  }
+.button {
+  width: 200px;
+  margin-right: 16px;
 }
 /*# sourceMappingURL=Navbar.module.css.map */

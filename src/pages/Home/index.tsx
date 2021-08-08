@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react"
 
-import useAuth from "hooks/useAuth"
-import { logout } from "api/auth"
-import { getToken } from "utils/auth"
 import useModal from "hooks/useModal"
 import { useVoucher, useVouchers } from "api/voucher"
 
-import { Button } from "@commitUI/index"
 import VoucherCard, { VoucherCardSkeleton } from "components/VoucherCard"
 import VoucherModal from "components/VoucherModal"
 import Navbar from "components/Navbar"
 
 const Home = () => {
-  const { logout: localLogout } = useAuth()
   const { isOpen, onClose, onOpen } = useModal()
   const { data: vouchers } = useVouchers("e0412934@u.nus.edu") // placeholder email
   const [openVoucher, setOpenVoucher] = useState<number>(0)
@@ -50,16 +45,6 @@ const Home = () => {
             : arr.map(() => <VoucherCardSkeleton />)}
         </div>
 
-        <Button
-          onClick={() => {
-            const token = getToken()
-            console.log(token)
-            logout({ refresh_token: token!.refresh })
-            localLogout()
-          }}
-        >
-          Log out
-        </Button>
       </div>
 
       <VoucherModal
