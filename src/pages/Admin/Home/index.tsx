@@ -3,14 +3,11 @@ import { Formik, Form, FormikHelpers, useFormikContext } from "formik"
 import * as yup from "yup"
 import { Column } from "react-table"
 
-import { logout } from "api/auth"
 import { useOrganizationVouchers } from "api/organization"
-import { getToken } from "utils/auth"
-import useAuth from "hooks/useAuth"
 import usePagination from "hooks/usePagination"
 import useModal from "hooks/useModal"
 
-import { Button, Table, Modal, ModalProps } from "@commitUI"
+import { Table, Modal, ModalProps } from "@commitUI"
 import { FileUpload, Input } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
@@ -48,7 +45,6 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
 
 const Home = () => {
   const [selected, setSelected] = useState<AdminVoucher>()
-  const { logout: localLogout } = useAuth()
   const { isOpen, onToggle } = useModal()
   const { page, setPage, setPerPage, perPage } = usePagination()
   const {
@@ -122,16 +118,6 @@ const Home = () => {
           onRowClick={handleSelect}
           className={styles.table}
         />
-
-        <Button
-          onClick={() => {
-            const token = getToken()
-            logout({ refresh_token: token!.refresh })
-            localLogout()
-          }}
-        >
-          Log out
-        </Button>
       </div>
       <Formik
         initialValues={initialValues}
