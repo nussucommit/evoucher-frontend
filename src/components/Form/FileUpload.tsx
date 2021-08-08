@@ -15,7 +15,7 @@ export const FileUpload = ({ name, ...props }: Props) => {
   return (
     <BaseFileUpload
       {...props}
-      text={field.value}
+      text={props.type === "image" ? field.value : props.type?.toUpperCase()}
       setFile={setFile}
       error={touched && error ? error : ""}
     />

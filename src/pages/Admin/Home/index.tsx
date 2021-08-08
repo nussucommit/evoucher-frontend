@@ -24,6 +24,8 @@ interface Values {
   description: string
   type: VoucherType | string
   image: string
+  codeList: string
+  emailList: string
 }
 
 const initialValues: Values = {
@@ -34,6 +36,8 @@ const initialValues: Values = {
   description: "",
   type: "Others",
   image: "",
+  codeList: "",
+  emailList: "",
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -44,6 +48,8 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   description: yup.string().required(),
   type: yup.string().required(),
   image: yup.string().required(),
+  codeList: yup.string().required(),
+  emailList: yup.string().required(),
 })
 
 const Home = () => {
@@ -103,6 +109,7 @@ const Home = () => {
   const handleSubmit = (values: Values) => {
     // rawDate(values.availableDate)
     // rawDate(values.expiryDate)
+    console.log(values)
   }
 
   return (
@@ -136,7 +143,7 @@ const Home = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={() => console.log("submit")}
+        onSubmit={handleSubmit}
         enableReinitialize
       >
         <Form>
@@ -170,8 +177,10 @@ const AdminVoucherModal = ({
       description: voucher?.description || "",
       type: voucher?.voucher_type || "",
       image: voucher?.image || "",
+      codeList: "",
+      emailList: "",
     })
-  }, [voucher])
+  }, [setValues, voucher])
 
   return (
     <Modal title="Edit Voucher" isOpen={isOpen} onClose={onClose}>
@@ -191,11 +200,27 @@ const AdminVoucherModal = ({
       />
 
       <FileUpload
-        text="Upload File"
+        label="Upload File"
         type="image"
         name="image"
         className={styles.upload}
       />
+
+      <FileUpload
+        label="Upload Voucher Code List (optional)"
+        type="csv"
+        name="codeList"
+        className={styles.upload}
+      />
+
+      <FileUpload
+        label="Upload Voucher Email List"
+        type="csv"
+        name="emailList"
+        className={styles.upload}
+      />
+
+      <Button onClick={submitForm}>Submit</Button>
     </Modal>
   )
 }

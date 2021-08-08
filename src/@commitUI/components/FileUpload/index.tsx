@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
 import { useDropzone, FileWithPath } from "react-dropzone"
 import cx from "classnames"
 
@@ -8,7 +8,9 @@ import { Button } from "../Button"
 import styles from "./FileUpload.module.css"
 
 export type Props = {
-  text: string
+  label?: string
+  text?: string
+  file?: string
   setFile: (base64?: string) => void
   className?: string
   type?: "image" | "csv" | "pdf"
@@ -17,24 +19,42 @@ export type Props = {
 
 const ACCEPTED = {
   image: "image/jpeg, image/png",
-  csv: ".csv",
+  csv:
+    ".csv, text/csv, application/vnd.ms-excel, application/csv, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values",
   pdf: ".pdf",
 }
 
 export const FileUpload = ({
+  label,
   text,
+  file,
   setFile,
   type,
   error,
   className,
 }: Props) => {
-  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+  const [preview, setPreview] = useState<string | ArrayBuffer | null>()
+  const onDropFile = useCallback((acceptedFiles: FileWithPath[]) => {
     acceptedFiles.forEach((file: FileWithPath) => {
       const reader = new FileReader()
       reader.onabort = () => console.log("file reading was aborted")
       reader.onerror = () => console.log("file reading has failed")
       reader.onload = () => {
         const result = reader.result as string
+        console.log(result)
+        setFile(result)
+      }
+      reader.readAsBinaryString(file)
+    })
+  }, [])
+  const onDropImage = useCallback((acceptedFiles: FileWithPath[]) => {
+    acceptedFiles.forEach((file: FileWithPath) => {
+      const reader = new FileReader()
+      reader.onabort = () => console.log("file reading was aborted")
+      reader.onerror = () => console.log("file reading has failed")
+      reader.onload = () => {
+        const result = reader.result as string
+        setPreview(result)
         const base64 = result.slice(result.indexOf(",") + 1)
         setFile(base64)
       }
@@ -50,7 +70,7 @@ export const FileUpload = ({
     isDragAccept,
     isDragReject,
   } = useDropzone({
-    onDrop,
+    onDrop: type === "image" ? onDropImage : onDropFile,
     maxFiles: 1,
     accept: type ? ACCEPTED[type] : undefined,
   })
@@ -70,25 +90,36 @@ export const FileUpload = ({
     setFile("")
   }
 
+  const hasFile = acceptedFiles.length || file
+
   return (
-    <>
+    <div className={styles.container}>
+      <Text className={styles.label}>{label}</Text>
       <div {...getRootProps({ className: cn })}>
+        {!hasFile && (
+          <Text className={styles.info}>
+            Click here or drag your file to upload!
+          </Text>
+        )}
         <input {...getInputProps()} />
         {acceptedFiles.length ? (
-          <Text>{acceptedFiles[0].name}</Text>
-        ) : (
           <>
-            {text.includes("https") && <img src={text} />}
-            <Text className={styles.text}>{text}</Text>
+            {preview ? (
+              <img src={preview as string} alt="preview" />
+            ) : (
+              <Text>{acceptedFiles[0].name}</Text>
+            )}
           </>
+        ) : (
+          <>{file?.includes("https") && <img src={file} />}</>
         )}
         {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
+        {acceptedFiles.length ? (
+          <Button type="text" onClick={removeFile} className={styles.remove}>
+            <Text className={styles.removeText}>Remove</Text>
+          </Button>
+        ) : null}
       </div>
-      {acceptedFiles.length ? (
-        <Button type="text" onClick={removeFile}>
-          Remove
-        </Button>
-      ) : null}
-    </>
+    </div>
   )
 }

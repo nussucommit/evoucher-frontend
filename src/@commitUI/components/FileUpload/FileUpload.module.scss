@@ -1,3 +1,15 @@
+.container {
+  margin-bottom: var(--spacing-base);
+}
+
+.label {
+  margin-bottom: var(--spacing-xs);
+}
+
+.info {
+  color: var(--gray-light);
+}
+
 .dropzone {
   display: flex;
   flex: 1;
@@ -26,4 +38,13 @@
 }
 .reject {
   border-color: var(--danger);
+}
+
+.remove {
+  margin-top: var(--spacing-base);
+}
+
+.removeText {
+  color: var(--danger);
+  font-weight: bold;
 }
