@@ -1,33 +1,34 @@
-import React, { useState } from "react";
-import { Squash as Hamburger } from "hamburger-react";
+import React from "react";
+import { Nav, NavLink, Heading, Button } from "@commitUI/index";
 
-import Sidebar from "components/Sidebar";
-import { Nav, NavLink, Heading } from "@commitUI/index";
+import { logout } from "api/auth";
+import { getToken } from "utils/auth";
+import useAuth from "hooks/useAuth";
 
 import styles from "./Navbar.module.css";
-import useWindowDimensions from "hooks/useWindowDimensions";
 
 const Navbar = () => {
-    const [isOpen, setOpen] = useState(false);
-    const { height, width } = useWindowDimensions();
+    const { logout: localLogout } = useAuth()
     return (
         <>
             <Nav backgroundColor="#002A56" color="#fff">
                 <NavLink to="/" noActive>
                     <Heading level={1}>NUSSU eVouchers</Heading>
                 </NavLink>
-
-                {width <= 768 && (
-                    <div className={styles.hamburger}>
-                        <Hamburger toggled={isOpen} toggle={setOpen} />
-                    </div>
-                )}
+                <div className={styles.align}></div>
+                {useAuth().isAuth && <Button
+                onClick={() => {
+                    const token = getToken()
+                    logout({ refresh_token: token!.refresh })
+                    localLogout()
+                }}
+                type="outlined"
+                className={styles.button}
+                >
+                Log out
+                </Button>
+                }  
             </Nav>
-            <Sidebar
-                isOpen={isOpen}
-                setOpen={setOpen}
-                backgroundColor="#002A56"
-            />
         </>
     );
 };
