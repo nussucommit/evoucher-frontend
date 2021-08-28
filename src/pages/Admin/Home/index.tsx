@@ -5,10 +5,10 @@ import { Column } from "react-table"
 
 import { useOrganizationVouchers } from "api/organization"
 import usePagination from "hooks/usePagination"
-import useModal from "hooks/useModal"
+import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 
-import { Table, Modal, ModalProps } from "@commitUI"
-import { FileUpload, Input } from "components/Form"
+import { Table, Modal, ModalProps, Button } from "@commitUI"
+import { FileUpload, Input, Select, TextArea } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
 import { displayDate, rawDate } from "utils/date"
@@ -49,9 +49,15 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   emailList: yup.string().required(),
 })
 
+enum types {
+  ADD = "ADD",
+  EDIT = "EDIT",
+}
+
 const Home = () => {
   const [selected, setSelected] = useState<AdminVoucher>()
-  const { isOpen, onToggle } = useModal()
+  const [open, setOpen] = useState<types | null>(null)
+  const onToggle = () => setOpen(null)
   const { page, setPage, setPerPage, perPage } = usePagination()
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
@@ -112,6 +118,9 @@ const Home = () => {
     <>
       <div className={styles.screen}>
         <h1>Admin Home Page</h1>
+
+        <Button onClick={() => setOpen(types.ADD)}>Add Voucher</Button>
+
         <Table
           data={vouchers.results as AdminVoucher[]}
           columns={columns}
@@ -135,7 +144,7 @@ const Home = () => {
         <Form>
           <AdminVoucherModal
             voucher={selected}
-            isOpen={isOpen}
+            type={open}
             onClose={onToggle}
           />
         </Form>
@@ -144,20 +153,23 @@ const Home = () => {
   )
 }
 
-type AdminVoucherModalProps = Omit<ModalProps, "children"> & {
+type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
   voucher?: AdminVoucher
+  type?: types | null
 }
 
 const AdminVoucherModal = ({
   voucher,
-  isOpen,
+  type,
   onClose,
 }: AdminVoucherModalProps) => {
   const { setValues, submitForm, values } = useFormikContext<Values>()
+  const isOpen = Boolean(type)
+  const isAdd = type === types.ADD
   useEffect(() => {
     setValues({
-      availableDate: displayDate(voucher?.available_date || ""),
-      expiryDate: displayDate(voucher?.expiry_date || ""),
+      availableDate: isAdd ? "" : displayDate(voucher?.available_date || ""),
+      expiryDate: isAdd ? "" : displayDate(voucher?.expiry_date || ""),
       name: voucher?.name || "",
       organization: voucher?.organization || "",
       description: voucher?.description || "",
@@ -166,13 +178,14 @@ const AdminVoucherModal = ({
       codeList: "",
       emailList: "",
     })
-  }, [setValues, voucher])
+  }, [setValues, voucher, type])
 
   return (
-    <Modal title="Edit Voucher" isOpen={isOpen} onClose={onClose}>
-      <p>{voucher?.name}</p>
-      <p>{rawDate(displayDate(values?.availableDate || "")).toJSON()}</p>
-
+    <Modal
+      title={isAdd ? "Add Voucher" : "Edit Voucher"}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <Input
         name="availableDate"
         label="Available Date (DD/MM/YYYY)"
@@ -185,6 +198,29 @@ const AdminVoucherModal = ({
         className={styles.input}
       />
 
+      <Input name="name" label="Name" className={styles.input} />
+
+      <Input
+        name="organization"
+        label="Organization / Faculty"
+        className={styles.input}
+      />
+
+      {/* To-do: Create TextArea component and replace this shit :) */}
+      <TextArea
+        name="description"
+        label="Description"
+        className={styles.input}
+      />
+
+      <Select
+        name="type"
+        label="Voucher Type"
+        options={VOUCHER_TYPE_OPTIONS}
+        isSearchable
+        className={styles.input}
+      />
+
       <FileUpload
         label="Upload File"
         type="image"
@@ -192,19 +228,23 @@ const AdminVoucherModal = ({
         className={styles.upload}
       />
 
-      <FileUpload
-        label="Upload Voucher Code List (optional)"
-        type="csv"
-        name="codeList"
-        className={styles.upload}
-      />
+      {!isAdd && (
+        <>
+          <FileUpload
+            label="Upload Voucher Code List (optional)"
+            type="csv"
+            name="codeList"
+            className={styles.upload}
+          />
 
-      <FileUpload
-        label="Upload Voucher Email List"
-        type="csv"
-        name="emailList"
-        className={styles.upload}
-      />
+          <FileUpload
+            label="Upload Voucher Email List"
+            type="csv"
+            name="emailList"
+            className={styles.upload}
+          />
+        </>
+      )}
 
       <Button onClick={submitForm}>Submit</Button>
     </Modal>
