@@ -26,25 +26,37 @@ interface CodeByEmail {
   email_id: number
 }
 
-interface AdminVoucher {
+type AdminVoucherFiles = {
+  image?: string
+  code_list?: string
+  email_list?: string
+}
+interface AdminVoucher extends AdminVoucherFiles {
   id: number
   posted_date: string
   available_date: string
   expiry_date: string
   name: string
   voucher_type: string
-  description: string
+  description?: string
   counter: number
   image: string
-  code_uploaded: boolean
+  code_uploaded?: boolean
   organization: string
 }
+
+type PostAdminVoucher = Omit<AdminVoucher, "id" | AdminVoucherFiles>
 
 interface OrganizationVouchers {
   count: number
   next: string
   previous: string
   results: AdminVoucher[]
+}
+
+type Option = {
+  value: string | number
+  label: string
 }
 
 type VoucherType = "Food" | "Sport" | "Fashion" | "Others"

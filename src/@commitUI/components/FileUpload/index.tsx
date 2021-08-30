@@ -55,8 +55,7 @@ export const FileUpload = ({
       reader.onload = () => {
         const result = reader.result as string
         setPreview(result)
-        const base64 = result.slice(result.indexOf(",") + 1)
-        setFile(base64)
+        setFile(result)
       }
       reader.readAsDataURL(file)
     })

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik"
 import * as yup from "yup"
 import { Column } from "react-table"
+import moment from "moment"
 
 import { useOrganizationVouchers } from "api/organization"
+import { createVoucher } from "api/voucher"
 import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 
@@ -11,7 +13,7 @@ import { Table, Modal, ModalProps, Button } from "@commitUI"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
-import { displayDate, rawDate } from "utils/date"
+import { checkDateFormat, displayDate, formatDate } from "utils/date"
 
 interface Values {
   availableDate: string
@@ -19,7 +21,7 @@ interface Values {
   name: string
   organization: string
   description: string
-  type: VoucherType | string
+  type: Option
   image: string
   codeList: string
   emailList: string
@@ -31,22 +33,41 @@ const initialValues: Values = {
   name: "",
   organization: "",
   description: "",
-  type: "Others",
+  type: {
+    label: "",
+    value: "",
+  },
   image: "",
   codeList: "",
   emailList: "",
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
-  availableDate: yup.string().required(),
-  expiryDate: yup.string().required(),
+  availableDate: yup
+    .string()
+    .test("valid format", "Invalid date format", (date) =>
+      checkDateFormat(date)
+    )
+    .required(),
+  expiryDate: yup
+    .string()
+    .test("valid format", "Invalid date format", (date) =>
+      checkDateFormat(date)
+    )
+    .required(),
   name: yup.string().required(),
   organization: yup.string().required(),
   description: yup.string().required(),
-  type: yup.string().required(),
+  type: yup
+    .object()
+    .shape({
+      value: yup.mixed().required("Required"),
+      label: yup.string(),
+    })
+    .required("Required"),
   image: yup.string().required(),
-  codeList: yup.string().required(),
-  emailList: yup.string().required(),
+  codeList: yup.string().default(""),
+  emailList: yup.string().default(""),
 })
 
 enum types {
@@ -109,9 +130,21 @@ const Home = () => {
   }
 
   const handleSubmit = (values: Values) => {
-    // rawDate(values.availableDate)
-    // rawDate(values.expiryDate)
-    console.log(values)
+    createVoucher(
+      {
+        posted_date: formatDate(new Date()),
+        available_date: formatDate(new Date(values.availableDate)),
+        expiry_date: formatDate(new Date(values.expiryDate)),
+        name: values.name,
+        voucher_type: values.type.value as string,
+        description: values.description,
+        counter: 0, // To-do
+        organization: values.organization,
+      },
+      {
+        image: values.image,
+      }
+    )
   }
 
   return (
@@ -163,7 +196,8 @@ const AdminVoucherModal = ({
   type,
   onClose,
 }: AdminVoucherModalProps) => {
-  const { setValues, submitForm, values } = useFormikContext<Values>()
+  const { setValues, submitForm, errors } = useFormikContext<Values>()
+  console.log(errors)
   const isOpen = Boolean(type)
   const isAdd = type === types.ADD
   useEffect(() => {
@@ -173,7 +207,10 @@ const AdminVoucherModal = ({
       name: voucher?.name || "",
       organization: voucher?.organization || "",
       description: voucher?.description || "",
-      type: voucher?.voucher_type || "",
+      type: {
+        label: voucher?.voucher_type || "",
+        value: voucher?.voucher_type || "",
+      },
       image: voucher?.image || "",
       codeList: "",
       emailList: "",
@@ -206,7 +243,6 @@ const AdminVoucherModal = ({
         className={styles.input}
       />
 
-      {/* To-do: Create TextArea component and replace this shit :) */}
       <TextArea
         name="description"
         label="Description"

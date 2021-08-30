@@ -29,6 +29,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "hamburger-react": "^2.4.1",
+    "moment": "^2.29.1",
     "node-sass": "^6.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

@@ -1,3 +1,7 @@
+import moment from "moment"
+
+import { DATE_FORMAT } from "constants/date"
+
 export const parseDate = (str: string) => new Date(str.replace(" ", "T"))
 
 export const dateToString = (date: string) => {
@@ -22,4 +26,14 @@ export const rawDate = (date: string) => {
   splitted[1] = tmp
 
   return new Date(splitted.join("/"))
+}
+
+export const formatDate = (date: Date): string => {
+  return moment(date).format(DATE_FORMAT)
+}
+
+export const checkDateFormat = (date?: string): boolean => {
+  return (
+    date?.charAt(2) === "/" && date?.charAt(5) === "/" && date?.length == 10
+  )
 }
