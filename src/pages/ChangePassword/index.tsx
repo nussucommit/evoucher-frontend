@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Formik, Form, FormikHelpers } from "formik"
 import * as yup from "yup"
 
@@ -6,14 +6,17 @@ import useAuth from "hooks/useAuth"
 import { changePassword, logout } from "api/auth"
 import history from "utils/history"
 import { getToken } from "utils/auth"
+import { useUser } from "api/user"
+import { useOrganization, updateOrganization } from "api/organization"
+import useModal from "hooks/useModal"
 
-import { Button, Heading } from "@commitUI/index"
+import { Alert, Button, Heading } from "@commitUI/index"
 import { Input } from "components/Form"
-import Navbar from "components/Navbar"
 
 import styles from "./ChangePassword.module.css"
 import logo from "assets/images/logo.png"
 import logo2 from "assets/images/logo2.jpeg"
+import { Routes } from "constants/routes"
 
 interface Values {
   old_password: string
@@ -21,19 +24,28 @@ interface Values {
   confirm_password: string
 }
 
-const ChangePassword = () => {
-  const { logout: localLogout } = useAuth()
-  const initialValues: Values = {
-    old_password: "",
-    new_password: "",
-    confirm_password: "",
-  }
+const initialValues: Values = {
+  old_password: "",
+  new_password: "",
+  confirm_password: "",
+}
 
-  const validationSchema: yup.SchemaOf<Values> = yup.object({
-    old_password: yup.string().required("Required"),
-    new_password: yup.string().required("Required"),
-    confirm_password: yup.string().required("Required"),
-  })
+const validationSchema: yup.SchemaOf<Values> = yup.object({
+  old_password: yup.string().required("Required"),
+  new_password: yup.string().required("Required"),
+  confirm_password: yup.string().required("Required"),
+})
+
+const ChangePassword = () => {
+  const { onOpen, onClose } = useModal()
+  const { logout: localLogout } = useAuth()
+  const { data: user } = useUser()
+  const { data: organization } = useOrganization(user?.username)
+
+  useEffect(() => {
+    onOpen()
+    setTimeout(() => onClose(), 4000)
+  }, [])
 
   const handleChangePassword = async (
     values: Values,
@@ -49,21 +61,38 @@ const ChangePassword = () => {
         new_password: values.new_password,
       })
 
+      if (organization?.name) {
+        updateOrganization(organization.name, {
+          is_first_time_login: false,
+        })
+      }
+
       const token = getToken()
-      console.log(token)
       logout({ refresh_token: token!.refresh })
       formikHelpers.setSubmitting(false)
+
       localLogout()
-      history.push("/login")
+      if (organization) {
+        history.push(Routes.adminLogin)
+      } else {
+        history.push(Routes.login)
+      }
     } catch (e) {
       // To-do: Make an alert card like on twitter to display the error message
-      formikHelpers.setFieldError("password", "Wrong username or password.")
+      formikHelpers.setFieldError("password", "Wrong password.")
       console.log(e)
     }
   }
 
   return (
     <>
+      {organization?.is_first_time_login && (
+        <Alert
+          message="Hi There! It seems like this is your first time logging in. Please change your password to ensure the security of your account."
+          className={styles.info}
+        />
+      )}
+
       <div className={styles.container}>
         <div className={styles.imgContainer}>
           <img
@@ -113,6 +142,13 @@ const ChangePassword = () => {
           </Form>
         </Formik>
       </div>
+
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
+        <Heading>Hi There!</Heading>
+        <Heading level={4} className={styles.modalText}>
+          Since this is your first time logging in, please change your password.
+        </Heading>
+      </Modal> */}
     </>
   )
 }

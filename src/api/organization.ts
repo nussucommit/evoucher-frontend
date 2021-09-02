@@ -1,3 +1,4 @@
+import request from "./request"
 import useRequest, { Config } from "./swr"
 
 export const useOrganization = (
@@ -27,3 +28,10 @@ export const useOrganizationVouchers = (
     },
     config
   )
+
+export const updateOrganization = (
+  name: string,
+  data: Partial<Organization>
+) => {
+  request.patch(`organization/${name}`, data)
+}
