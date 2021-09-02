@@ -30,6 +30,7 @@ export const Select = ({
   return (
     <ReactSelect
       {...props}
+      value={value}
       blurInputOnSelect
       onChange={onChange}
       onBlur={onBlur}

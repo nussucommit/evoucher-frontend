@@ -14,12 +14,14 @@ import Home from "./Home"
 import ChangePassword from "./ChangePassword"
 import AdminLogin from "./Admin/Login"
 import AdminHome from "./Admin/Home"
+import Navbar from "components/Navbar"
 
 // Protected Pages
 
 const Pages = () => {
   return (
     <Router history={history}>
+      <Navbar />
       <Switch>
         {/* Public routes */}
         <PublicRoute path={Routes.login} component={Login} />
@@ -35,6 +37,11 @@ const Pages = () => {
         />
 
         {/* Admin routes */}
+        <AdminRoute
+          exact
+          path={Routes.adminChangePassword}
+          component={ChangePassword}
+        />
         <AdminRoute path={Routes.adminHome} component={AdminHome} />
       </Switch>
     </Router>

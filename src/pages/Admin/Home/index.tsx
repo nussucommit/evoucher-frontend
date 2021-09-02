@@ -2,18 +2,29 @@ import React, { useEffect, useState } from "react"
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik"
 import * as yup from "yup"
 import { Column } from "react-table"
-import moment from "moment"
 
-import { useOrganizationVouchers } from "api/organization"
-import { createVoucher } from "api/voucher"
+import { useUser } from "api/user"
+import { useOrganization, useOrganizationVouchers } from "api/organization"
+import {
+  createVoucher,
+  editVoucher,
+  uploadCodeList,
+  uploadEmailList,
+} from "api/voucher"
 import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 
-import { Table, Modal, ModalProps, Button } from "@commitUI"
+import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
-import { checkDateFormat, displayDate, formatDate } from "utils/date"
+import {
+  checkDateFormat,
+  displayDate,
+  formatDate,
+  toDateObject,
+} from "utils/date"
+import { isSameFileUrl } from "utils/file"
 
 interface Values {
   availableDate: string
@@ -76,16 +87,16 @@ enum types {
 }
 
 const Home = () => {
+  const { data: user } = useUser()
+  const { data: organization } = useOrganization(user?.username)
   const [selected, setSelected] = useState<AdminVoucher>()
   const [open, setOpen] = useState<types | null>(null)
-  const onToggle = () => setOpen(null)
+  const closeModal = () => setOpen(null)
   const { page, setPage, setPerPage, perPage } = usePagination()
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
-    revalidate,
-    isValidating,
   } = useOrganizationVouchers({
-    Organization: "NUSSU Welfare",
+    Organization: organization?.name,
     page: page.toString(),
     page_size: perPage.toString(),
   })
@@ -94,7 +105,7 @@ const Home = () => {
     () => [
       {
         Header: "ID",
-        accessor: "id",
+        accessor: "uuid",
       },
       {
         Header: "Voucher Name",
@@ -124,50 +135,80 @@ const Home = () => {
     []
   )
 
-  const handleSelect = (id: number) => {
-    setSelected(vouchers.results.find((voucher) => voucher.id === id))
-    onToggle()
+  const handleSelect = (uuid: string) => {
+    setSelected(vouchers.results.find((voucher) => voucher.uuid === uuid))
+    setOpen(types.EDIT)
   }
 
-  const handleSubmit = (values: Values) => {
-    createVoucher(
-      {
-        posted_date: formatDate(new Date()),
-        available_date: formatDate(new Date(values.availableDate)),
-        expiry_date: formatDate(new Date(values.expiryDate)),
-        name: values.name,
-        voucher_type: values.type.value as string,
-        description: values.description,
-        counter: 0, // To-do
-        organization: values.organization,
-      },
-      {
-        image: values.image,
+  const handleSubmit = async (
+    values: Values,
+    formikHelpers: FormikHelpers<Values>
+  ) => {
+    // To-do: CHECK DATE FORMAT!! MONTH AND DAY IS FLIPPED
+    const data = {
+      posted_date: formatDate(new Date()),
+      available_date: formatDate(toDateObject(values.availableDate)),
+      expiry_date: formatDate(toDateObject(values.expiryDate)),
+      name: values.name,
+      voucher_type: values.type.value as string,
+      description: values.description,
+      counter: 0, // To-do
+      organization: values.organization,
+    }
+
+    const files: { [key: string]: any } = {}
+    if (!isSameFileUrl(selected?.image, values.image)) {
+      files.image = values.image
+    }
+
+    if (open === types.ADD) {
+      createVoucher(data, files)
+    } else if (open === types.EDIT) {
+      editVoucher(selected!.uuid, data, files)
+
+      if (values.codeList) {
+        // Need to wait for code to be created first, before we can assign the code to an instance of IdCodeEmail
+        await uploadCodeList(selected!.uuid, {
+          code_list: values.codeList,
+        })
       }
-    )
+      if (values.emailList) {
+        uploadEmailList(selected!.uuid, {
+          email_list: values.emailList,
+        })
+      }
+    }
+
+    closeModal()
+    formikHelpers.resetForm()
   }
 
   return (
     <>
       <div className={styles.screen}>
-        <h1>Admin Home Page</h1>
+        <Heading level={1}>{`${organization?.name}'s Voucher List`}</Heading>
 
-        <Button onClick={() => setOpen(types.ADD)}>Add Voucher</Button>
+        <div className={styles.content}>
+          <Button onClick={() => setOpen(types.ADD)} className={styles.addBtn}>
+            Add Voucher
+          </Button>
 
-        <Table
-          data={vouchers.results as AdminVoucher[]}
-          columns={columns}
-          currentPage={page}
-          setPage={setPage}
-          perPage={perPage}
-          setPerPage={setPerPage}
-          totalPage={Math.ceil(vouchers?.count / perPage)}
-          hasNextPage={Boolean(vouchers?.next)}
-          hasPrevPage={Boolean(vouchers?.previous)}
-          onRowClick={handleSelect}
-          className={styles.table}
-        />
+          <Table
+            data={vouchers.results as AdminVoucher[]}
+            columns={columns}
+            currentPage={page}
+            setPage={setPage}
+            perPage={perPage}
+            setPerPage={setPerPage}
+            totalPage={Math.ceil(vouchers?.count / perPage)}
+            hasNextPage={Boolean(vouchers?.next)}
+            hasPrevPage={Boolean(vouchers?.previous)}
+            onRowClick={handleSelect}
+            className={styles.table}
+          />
+        </div>
       </div>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -178,7 +219,7 @@ const Home = () => {
           <AdminVoucherModal
             voucher={selected}
             type={open}
-            onClose={onToggle}
+            onClose={closeModal}
           />
         </Form>
       </Formik>
@@ -196,8 +237,13 @@ const AdminVoucherModal = ({
   type,
   onClose,
 }: AdminVoucherModalProps) => {
-  const { setValues, submitForm, errors } = useFormikContext<Values>()
-  console.log(errors)
+  const {
+    setValues,
+    submitForm,
+    errors,
+    values,
+    setFieldValue,
+  } = useFormikContext<Values>()
   const isOpen = Boolean(type)
   const isAdd = type === types.ADD
   useEffect(() => {
@@ -215,7 +261,15 @@ const AdminVoucherModal = ({
       codeList: "",
       emailList: "",
     })
+    console.log("after2")
   }, [setValues, voucher, type])
+
+  useEffect(() => {
+    setFieldValue("type", {
+      label: voucher?.voucher_type || "",
+      value: voucher?.voucher_type || "",
+    })
+  }, [voucher])
 
   return (
     <Modal

@@ -1,5 +1,13 @@
 .screen {
-  text-align: center;
+  margin: 5vh var(--spacing-base);
+
+  .content {
+    margin-top: var(--spacing-2xl);
+  }
+
+  .addBtn {
+    width: 10vw;
+  }
 
   .table {
     margin: var(--spacing-base) auto;

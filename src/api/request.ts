@@ -65,6 +65,7 @@ request.interceptors.response.use(
     ) {
       if (token) {
         try {
+          console.log("X")
           // Call the refresh endpoint to get a new access token
           const { data } = await request.post<{ access: string }>(
             REFRESH_TOKEN_ENDPOINT,
@@ -84,10 +85,12 @@ request.interceptors.response.use(
           // Retry the request again with the new token
           return request.request(originalRequest)
         } catch {
+          console.log("h")
           logout()
           return
         }
       } else {
+        console.log("t")
         logout()
         return
       }

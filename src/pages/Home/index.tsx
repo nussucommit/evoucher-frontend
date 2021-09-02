@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
 import useModal from "hooks/useModal"
 import { useVoucher, useVouchers } from "api/voucher"
@@ -27,7 +27,6 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
       <div style={{ backgroundColor: "#fff", margin: 32 }}>
         <div
           style={{
@@ -44,7 +43,6 @@ const Home = () => {
               ))
             : arr.map(() => <VoucherCardSkeleton />)}
         </div>
-
       </div>
 
       <VoucherModal

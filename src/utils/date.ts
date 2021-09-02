@@ -1,4 +1,4 @@
-import moment from "moment"
+import { format } from "date-fns"
 
 import { DATE_FORMAT } from "constants/date"
 
@@ -16,7 +16,11 @@ export const displayDate = (date: string) => {
   const month = raw.getMonth() + 1 // getMonth() returns 0 – 11
   const year = raw.getFullYear()
 
-  return day + "/" + month + "/" + year
+  return padDate(day.toString()) + "/" + padDate(month.toString()) + "/" + year
+}
+
+const padDate = (date: string) => {
+  return date.length === 2 ? date : "0" + date
 }
 
 export const rawDate = (date: string) => {
@@ -28,8 +32,16 @@ export const rawDate = (date: string) => {
   return new Date(splitted.join("/"))
 }
 
+export const toDateObject = (date: string): Date => {
+  return new Date(
+    parseInt(date.substring(6)),
+    parseInt(date.substring(3, 6)) - 1,
+    parseInt(date.substring(0, 3))
+  )
+}
+
 export const formatDate = (date: Date): string => {
-  return moment(date).format(DATE_FORMAT)
+  return format(date, DATE_FORMAT)
 }
 
 export const checkDateFormat = (date?: string): boolean => {

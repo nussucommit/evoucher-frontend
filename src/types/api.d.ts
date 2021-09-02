@@ -32,7 +32,7 @@ type AdminVoucherFiles = {
   email_list?: string
 }
 interface AdminVoucher extends AdminVoucherFiles {
-  id: number
+  uuid: string
   posted_date: string
   available_date: string
   expiry_date: string
@@ -45,7 +45,7 @@ interface AdminVoucher extends AdminVoucherFiles {
   organization: string
 }
 
-type PostAdminVoucher = Omit<AdminVoucher, "id" | AdminVoucherFiles>
+type PostAdminVoucher = Omit<AdminVoucher, "uuid" | AdminVoucherFiles>
 
 interface OrganizationVouchers {
   count: number
@@ -59,4 +59,12 @@ type Option = {
   label: string
 }
 
-type VoucherType = "Food" | "Sport" | "Fashion" | "Others"
+type VoucherType = "Default" | "No code" | "Dinamically allocated"
+
+interface User {
+  username: string
+}
+
+interface Organization {
+  name: string
+}

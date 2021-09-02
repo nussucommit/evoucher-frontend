@@ -10,12 +10,12 @@ import useRequestState from "hooks/useRequestState"
 
 import { Button, Heading } from "@commitUI/index"
 import { Input, Select } from "components/Form"
-import Navbar from "components/Navbar"
 import LinkButton from "components/LinkButton"
 
 import styles from "./Register.module.css"
 import logo from "../../assets/images/logo.png"
 import logo2 from "assets/images/logo2.jpeg"
+import { AxiosError } from "axios"
 
 type Option = {
   value: string | number
@@ -90,7 +90,7 @@ const Register = () => {
       formikHelpers.setSubmitting(false)
       history.push("/login")
     } catch (e) {
-      state.setError(e)
+      state.setError((e as AxiosError).message)
       console.log(e)
     }
     state.end()
@@ -98,7 +98,6 @@ const Register = () => {
 
   return (
     <>
-      <Navbar />
       <div className={styles.container}>
         <div className={styles.imgContainer}>
           <img src={logo2} alt="logo" className={styles.welfare} />

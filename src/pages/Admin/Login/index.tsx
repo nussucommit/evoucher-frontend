@@ -61,7 +61,6 @@ const AdminLogin = () => {
 
   return (
     <>
-      <Navbar />
       <div className={styles.container}>
         <div className={styles.imgContainer}>
           <img

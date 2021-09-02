@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDropzone, FileWithPath } from "react-dropzone"
 import cx from "classnames"
 
@@ -44,7 +44,7 @@ export const FileUpload = ({
         console.log(result)
         setFile(result)
       }
-      reader.readAsBinaryString(file)
+      reader.readAsDataURL(file)
     })
   }, [])
   const onDropImage = useCallback((acceptedFiles: FileWithPath[]) => {
@@ -60,6 +60,13 @@ export const FileUpload = ({
       reader.readAsDataURL(file)
     })
   }, [])
+
+  useEffect(() => {
+    // If already has image
+    if (text?.includes("https")) {
+      setPreview(text)
+    }
+  }, [text])
 
   const {
     acceptedFiles,
@@ -101,7 +108,7 @@ export const FileUpload = ({
           </Text>
         )}
         <input {...getInputProps()} />
-        {acceptedFiles.length ? (
+        {acceptedFiles.length && (
           <>
             {preview ? (
               <img src={preview as string} alt="preview" />
@@ -109,9 +116,8 @@ export const FileUpload = ({
               <Text>{acceptedFiles[0].name}</Text>
             )}
           </>
-        ) : (
-          <>{file?.includes("https") && <img src={file} />}</>
         )}
+        {preview && <img src={preview as string} alt="preview" />}
         {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
         {acceptedFiles.length ? (
           <Button type="text" onClick={removeFile} className={styles.remove}>

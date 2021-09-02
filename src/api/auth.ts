@@ -23,7 +23,7 @@ export const register = (data: {
   return request.post("/register", data)
 }
 
-export const changepassword = (data: {
+export const changePassword = (data: {
   old_password: string
   new_password: string
 }) => {
