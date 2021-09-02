@@ -67,4 +67,5 @@ interface User {
 
 interface Organization {
   name: string
+  is_first_time_login: boolean
 }

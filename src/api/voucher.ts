@@ -48,7 +48,7 @@ export const editVoucher = (
     if (imageFile) formData.append("image", imageFile, imageFile.name)
   }
 
-  request.patch(`/voucher/${uuid}`, formData)
+  return request.patch(`/voucher/${uuid}`, formData)
 }
 
 export const uploadCodeList = (

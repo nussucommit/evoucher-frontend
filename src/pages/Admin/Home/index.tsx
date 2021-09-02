@@ -4,6 +4,7 @@ import * as yup from "yup"
 import { Column } from "react-table"
 
 import { useUser } from "api/user"
+import { Routes } from "constants/routes"
 import { useOrganization, useOrganizationVouchers } from "api/organization"
 import {
   createVoucher,
@@ -13,6 +14,7 @@ import {
 } from "api/voucher"
 import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
+import useRedirect from "hooks/useRedirect"
 
 import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
@@ -95,11 +97,17 @@ const Home = () => {
   const { page, setPage, setPerPage, perPage } = usePagination()
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
+    revalidate,
   } = useOrganizationVouchers({
     Organization: organization?.name,
     page: page.toString(),
     page_size: perPage.toString(),
   })
+
+  useRedirect(
+    Routes.adminChangePassword,
+    Boolean(organization?.is_first_time_login)
+  )
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
@@ -164,7 +172,8 @@ const Home = () => {
     if (open === types.ADD) {
       createVoucher(data, files)
     } else if (open === types.EDIT) {
-      editVoucher(selected!.uuid, data, files)
+      await editVoucher(selected!.uuid, data, files)
+      await revalidate()
 
       if (values.codeList) {
         // Need to wait for code to be created first, before we can assign the code to an instance of IdCodeEmail
@@ -240,28 +249,28 @@ const AdminVoucherModal = ({
   const {
     setValues,
     submitForm,
-    errors,
-    values,
+    resetForm,
     setFieldValue,
   } = useFormikContext<Values>()
   const isOpen = Boolean(type)
   const isAdd = type === types.ADD
   useEffect(() => {
-    setValues({
-      availableDate: isAdd ? "" : displayDate(voucher?.available_date || ""),
-      expiryDate: isAdd ? "" : displayDate(voucher?.expiry_date || ""),
-      name: voucher?.name || "",
-      organization: voucher?.organization || "",
-      description: voucher?.description || "",
-      type: {
-        label: voucher?.voucher_type || "",
-        value: voucher?.voucher_type || "",
-      },
-      image: voucher?.image || "",
-      codeList: "",
-      emailList: "",
-    })
-    console.log("after2")
+    if (!isAdd) {
+      setValues({
+        availableDate: isAdd ? "" : displayDate(voucher?.available_date || ""),
+        expiryDate: isAdd ? "" : displayDate(voucher?.expiry_date || ""),
+        name: voucher?.name || "",
+        organization: voucher?.organization || "",
+        description: voucher?.description || "",
+        type: {
+          label: voucher?.voucher_type || "",
+          value: voucher?.voucher_type || "",
+        },
+        image: voucher?.image || "",
+        codeList: "",
+        emailList: "",
+      })
+    }
   }, [setValues, voucher, type])
 
   useEffect(() => {
@@ -270,6 +279,10 @@ const AdminVoucherModal = ({
       value: voucher?.voucher_type || "",
     })
   }, [voucher])
+
+  useEffect(() => {
+    if (!type) resetForm()
+  }, [type])
 
   return (
     <Modal

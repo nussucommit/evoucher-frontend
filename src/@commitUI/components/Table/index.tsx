@@ -118,7 +118,9 @@ export const Table = <DataType extends {}>({
                 onClick={() => onRowClick && onRowClick(row.cells[0].value)}
               >
                 {row.cells.map((cell) => (
-                  <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                  <Td {...cell.getCellProps()} overflowWrap="break-word">
+                    {cell.render("Cell")}
+                  </Td>
                 ))}
               </Tr>
             )

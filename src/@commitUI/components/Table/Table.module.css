@@ -1,3 +1,7 @@
+td {
+  max-width: 200px;
+}
+
 .footer {
   display: -webkit-box;
   display: -ms-flexbox;
