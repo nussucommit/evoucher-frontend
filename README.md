@@ -14,7 +14,7 @@ First, clone the repository.
 git clone https://github.com/nussucommit/evoucher-frontend.git
 ```
 
-Then, install dependencies and fetch data to your local machine. **Note that we use Yarn, not npm.**
+Then, install all the dependencies
 
 ```bash
 cd evoucher-frontend
