@@ -2,7 +2,7 @@
 name: Feature request
 about: Additional features for the project.
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
@@ -15,9 +15,9 @@ assignees: ''
 
 <!-- (Optional) If available, outline the possible steps to take (e.g. lines of code to change, architectural details, etc.) to implement the feature. -->
 
-## Specifications
+## Tasks
 
-<!-- (Optional) List any available specifications for this issue with checkbox lists. -->
+<!-- (Optional) List any available tasks for this issue with checkbox lists. -->
 
 - [ ] ...
 - [ ] ...
