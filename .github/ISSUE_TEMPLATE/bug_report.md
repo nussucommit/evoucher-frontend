@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Pls fix :>
+about: Something's not working as expected.
 title: ''
 labels: bug
 assignees: ''
