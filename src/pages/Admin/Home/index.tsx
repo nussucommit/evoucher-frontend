@@ -106,7 +106,7 @@ const Home = () => {
 
   useRedirect(
     Routes.adminChangePassword,
-    Boolean(organization?.is_first_time_login)
+    Boolean(organization) && organization!.is_first_time_login
   )
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
@@ -152,7 +152,6 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
-    // To-do: CHECK DATE FORMAT!! MONTH AND DAY IS FLIPPED
     const data = {
       posted_date: formatDate(new Date()),
       available_date: formatDate(toDateObject(values.availableDate)),

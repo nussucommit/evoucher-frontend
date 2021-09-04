@@ -40,7 +40,7 @@ const ChangePassword = () => {
   const { onOpen, onClose } = useModal()
   const { logout: localLogout } = useAuth()
   const { data: user } = useUser()
-  const { data: organization } = useOrganization(user?.username)
+  const { data: organization, mutate } = useOrganization(user?.username)
 
   useEffect(() => {
     onOpen()
@@ -56,15 +56,17 @@ const ChangePassword = () => {
         throw new Error("Wrong confirm password")
       }
 
-      const res = await changePassword({
+      await changePassword({
         old_password: values.old_password,
         new_password: values.new_password,
       })
 
       if (organization?.name) {
-        updateOrganization(organization.name, {
-          is_first_time_login: false,
-        })
+        await mutate(
+          await updateOrganization(organization.name, {
+            is_first_time_login: false,
+          })
+        )
       }
 
       const token = getToken()
@@ -115,6 +117,7 @@ const ChangePassword = () => {
             <Input
               name="old_password"
               label="Old Password"
+              type="password"
               className={styles.input}
             />
 

@@ -102,24 +102,19 @@ export const FileUpload = ({
     <div className={styles.container}>
       <Text className={styles.label}>{label}</Text>
       <div {...getRootProps({ className: cn })}>
-        {!hasFile && (
+        {!hasFile && !preview && (
           <Text className={styles.info}>
             Click here or drag your file to upload!
           </Text>
         )}
         <input {...getInputProps()} />
-        {acceptedFiles.length && (
-          <>
-            {preview ? (
-              <img src={preview as string} alt="preview" />
-            ) : (
-              <Text>{acceptedFiles[0].name}</Text>
-            )}
-          </>
+        {preview ? (
+          <img src={preview as string} alt="preview" />
+        ) : (
+          <Text>{acceptedFiles[0]?.name}</Text>
         )}
-        {preview && <img src={preview as string} alt="preview" />}
         {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
-        {acceptedFiles.length ? (
+        {acceptedFiles.length || preview ? (
           <Button type="text" onClick={removeFile} className={styles.remove}>
             <Text className={styles.removeText}>Remove</Text>
           </Button>
