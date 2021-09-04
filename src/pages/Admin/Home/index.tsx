@@ -17,7 +17,7 @@ import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 import useRedirect from "hooks/useRedirect"
 
 import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
-import { FileUpload, Input, Select, TextArea } from "components/Form"
+import { FileUpload, Input, Select, TextArea, DateInput } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
 import {
@@ -290,13 +290,13 @@ const AdminVoucherModal = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <Input
+      <DateInput
         name="availableDate"
         label="Available Date (DD/MM/YYYY)"
         className={styles.input}
       />
 
-      <Input
+      <DateInput
         name="expiryDate"
         label="Expiry Date (DD/MM/YYYY)"
         className={styles.input}
