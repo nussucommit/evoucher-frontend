@@ -16,7 +16,9 @@ import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 import useRedirect from "hooks/useRedirect"
 
-import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
+// To-do: Divide Table into two components, UI in commit-design and functionality in local /components
+import { Table } from "@commitUI"
+import { Modal, ModalProps, Button, Heading, Search } from "commit-design"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
 import useSearch from "hooks/useSearch"
 import {
@@ -108,7 +110,7 @@ const Home = () => {
     page: page.toString(),
     page_size: perPage.toString(),
   })
-  const { Search, searchProps, filteredData: data } = useSearch(
+  const { searchProps, filteredData: data } = useSearch(
     vouchers.results as AdminVoucher[],
     "name"
   )

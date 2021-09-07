@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from "react"
 
 import { InputProps } from "commit-design"
-import { Search } from "@commitUI"
 
 /**
  * React hook to provide search functionality out of the box
@@ -25,7 +24,7 @@ const useSearch = <T extends { [x: string]: any }>(
     onChange: (e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value),
   }
 
-  return { Search, searchProps, filteredData }
+  return { searchProps, filteredData }
 }
 
 export default useSearch
