@@ -211,7 +211,7 @@ const Home = () => {
         <Heading level={1}>{`${organization?.name}'s Voucher List`}</Heading>
 
         <div className={styles.content}>
-          <div>
+          <div className={styles.topContent}>
             <Button
               onClick={() => setOpen(types.ADD)}
               className={styles.addBtn}
@@ -219,7 +219,11 @@ const Home = () => {
               Add Voucher
             </Button>
 
-            <Search id="search" label="Search" {...searchProps} />
+            <Search
+              id="search"
+              placeholder="Search (Press / )"
+              {...searchProps}
+            />
           </div>
 
           <Table

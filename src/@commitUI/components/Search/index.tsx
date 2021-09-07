@@ -1,12 +1,13 @@
-import React, { InputHTMLAttributes } from "react"
+import { InputHTMLAttributes } from "react"
 import cx from "classnames"
+import { Search2Icon, SearchIcon } from "@chakra-ui/icons"
 
 import { Text } from "../Text"
 
 import styles from "./Search.module.css"
+import { Color } from "@commitUI/constants/theme"
 
-interface ExtendedInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "placeholder"> {
+interface ExtendedInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   error?: string
 }
@@ -22,21 +23,16 @@ export const Search = ({
   type = "text",
   ...rest
 }: ExtendedInputProps) => {
-  const cn = cx(
-    styles.container,
-    {
-      [styles.containerError]: Boolean(error),
-    },
-    className
-  )
-
-  const cnLabel = cx({
-    [styles.filled]: value !== "",
-    [styles.labelError]: Boolean(error),
-  })
+  const cn = cx(styles.container, className)
 
   return (
-    <div className={cn} {...rest}>
+    <div className={cn}>
+      <SearchIcon
+        w={5}
+        h={5}
+        color={Color.grayLight}
+        className={styles.searchIcon}
+      />
       <input
         {...rest}
         value={value}
@@ -45,12 +41,6 @@ export const Search = ({
         disabled={disabled as boolean}
         className={Boolean(error) ? styles.inputError : undefined}
       />
-      <label className={cnLabel}>{label}</label>
-      {Boolean(error) && (
-        <Text size="xs" semibold className={styles.error}>
-          {error}
-        </Text>
-      )}
     </div>
   )
 }
