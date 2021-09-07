@@ -15,6 +15,11 @@ const defaultValue: {
 
 export const AuthContext = createContext(defaultValue)
 
+/**
+ * React hook to handle user client-side authentication
+ *
+ * @returns a react context
+ */
 const useAuth = () => useContext(AuthContext)
 
 export default useAuth

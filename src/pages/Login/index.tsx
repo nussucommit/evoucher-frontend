@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { Formik, Form, FormikHelpers } from "formik"
 import * as yup from "yup"
 
@@ -10,7 +10,6 @@ import useRequestState from "hooks/useRequestState"
 
 import { Button, Heading, Alert } from "@commitUI/index"
 import { Input } from "components/Form"
-import Navbar from "components/Navbar"
 import LinkButton from "components/LinkButton"
 
 import styles from "./Login.module.css"
