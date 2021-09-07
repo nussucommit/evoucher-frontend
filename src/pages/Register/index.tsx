@@ -111,7 +111,12 @@ const Register = () => {
           onSubmit={handleRegister}
         >
           <Form>
-            <Input name="name" label="Name" className={styles.input} />
+            <Input
+              autoFocus
+              name="name"
+              label="Name"
+              className={styles.input}
+            />
 
             <div className={styles.halfInputContainer}>
               <Input

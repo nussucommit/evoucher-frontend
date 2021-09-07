@@ -29,6 +29,7 @@ import {
 import { isSameFileUrl } from "utils/file"
 
 interface Values {
+  search?: string
   availableDate: string
   expiryDate: string
   name: string
@@ -41,6 +42,7 @@ interface Values {
 }
 
 const initialValues: Values = {
+  search: "",
   availableDate: "",
   expiryDate: "",
   name: "",
@@ -56,6 +58,7 @@ const initialValues: Values = {
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
+  search: yup.string().default(""),
   availableDate: yup
     .string()
     .test("valid format", "Invalid date format", (date) =>
@@ -197,9 +200,15 @@ const Home = () => {
         <Heading level={1}>{`${organization?.name}'s Voucher List`}</Heading>
 
         <div className={styles.content}>
-          <Button onClick={() => setOpen(types.ADD)} className={styles.addBtn}>
-            Add Voucher
-          </Button>
+          <div>
+            <Button
+              onClick={() => setOpen(types.ADD)}
+              className={styles.addBtn}
+            >
+              Add Voucher
+            </Button>
+            <Input name="search" label="Search" className={styles.input} />
+          </div>
 
           <Table
             data={vouchers.results as AdminVoucher[]}

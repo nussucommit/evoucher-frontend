@@ -38,6 +38,7 @@ export const Input = ({
   return (
     <div className={cn} {...rest}>
       <input
+        {...rest}
         value={value}
         type={type}
         id={id as string}

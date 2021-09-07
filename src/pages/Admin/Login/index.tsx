@@ -88,7 +88,12 @@ const AdminLogin = () => {
               />
             )}
 
-            <Input name="username" label="Username" className={styles.input} />
+            <Input
+              autoFocus
+              name="username"
+              label="Username"
+              className={styles.input}
+            />
 
             <Input
               name="password"

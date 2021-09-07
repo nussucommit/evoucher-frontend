@@ -86,7 +86,12 @@ const Login = () => {
               />
             )}
 
-            <Input name="nusnet" label="NUSNET ID" className={styles.input} />
+            <Input
+              autoFocus
+              name="nusnet"
+              label="NUSNET ID"
+              className={styles.input}
+            />
 
             <Input
               name="password"
