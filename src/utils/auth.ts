@@ -18,4 +18,5 @@ export const saveToken = (token: Token, authType: "USER" | "ADMIN") => {
 export const deleteToken = () => {
   session.removeItem(SessionStorageKey.access)
   session.removeItem(SessionStorageKey.refresh)
+  session.removeItem(SessionStorageKey.authType)
 }

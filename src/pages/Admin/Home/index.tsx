@@ -19,8 +19,6 @@ import useRedirect from "hooks/useRedirect"
 import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
 import useSearch from "hooks/useSearch"
-
-import styles from "./AdminHome.module.scss"
 import {
   checkDateFormat,
   displayDate,
@@ -28,6 +26,9 @@ import {
   toDateObject,
 } from "utils/date"
 import { isSameFileUrl } from "utils/file"
+import { focusElementWithHotkey } from "utils/focusElement"
+
+import styles from "./AdminHome.module.scss"
 
 interface Values {
   search?: string
@@ -116,6 +117,11 @@ const Home = () => {
     Routes.adminChangePassword,
     Boolean(organization) && organization!.is_first_time_login
   )
+
+  useEffect(() => {
+    const closeEventListener = focusElementWithHotkey("#search", "/")
+    return closeEventListener
+  })
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
@@ -213,7 +219,7 @@ const Home = () => {
               Add Voucher
             </Button>
 
-            <Search label="Search" {...searchProps} />
+            <Search id="search" label="Search" {...searchProps} />
           </div>
 
           <Table

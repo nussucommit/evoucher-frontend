@@ -4,10 +4,13 @@ import history from "utils/history"
 import { getToken, deleteToken, saveToken } from "utils/auth"
 import { API_URL } from "constants/config"
 import { Routes } from "constants/routes"
+import session from "utils/sessionStorage"
+import useAuth from "hooks/useAuth"
 
 export const REFRESH_TOKEN_ENDPOINT = "/token/refresh"
 // Code returned by backend if refresh token is invalid or expired
 const TOKEN_EXPIRED_CODE = "token_not_valid"
+const NO_AUTHENTICATION_CODE = "Authentication credentials were not provided."
 
 // Create an Axios instance with custom config
 const request = axios.create({
@@ -23,7 +26,7 @@ const request = axios.create({
 
 const logout = () => {
   deleteToken()
-  history.push(Routes.login)
+  useAuth.setState({ isAuth: undefined })
 }
 
 request.interceptors.request.use(
@@ -48,10 +51,10 @@ request.interceptors.response.use(
     if (
       // Case: invalid refresh token
       (error.response?.status === 401 &&
-        error.response?.data?.code === TOKEN_EXPIRED_CODE &&
+        error.response?.data?.detail === TOKEN_EXPIRED_CODE &&
         originalRequest.url === REFRESH_TOKEN_ENDPOINT) ||
       // Case: user auth error
-      error.response?.data?.code === "user_not_found"
+      error.response?.data?.detail === NO_AUTHENTICATION_CODE
     ) {
       logout()
       return
@@ -65,7 +68,6 @@ request.interceptors.response.use(
     ) {
       if (token) {
         try {
-          console.log("X")
           // Call the refresh endpoint to get a new access token
           const { data } = await request.post<{ access: string }>(
             REFRESH_TOKEN_ENDPOINT,
@@ -85,12 +87,10 @@ request.interceptors.response.use(
           // Retry the request again with the new token
           return request.request(originalRequest)
         } catch {
-          console.log("h")
           logout()
           return
         }
       } else {
-        console.log("t")
         logout()
         return
       }

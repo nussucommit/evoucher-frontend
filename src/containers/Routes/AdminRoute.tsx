@@ -11,6 +11,7 @@ interface AdminRouteProps extends Omit<RouteProps, "component"> {
 const AdminRoute = (props: AdminRouteProps): JSX.Element => {
   const { component: Component, ...routeProps } = props
   const { isAuth } = useAuth()
+
   return (
     <Route
       {...routeProps}

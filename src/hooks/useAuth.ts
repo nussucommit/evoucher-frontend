@@ -1,25 +1,37 @@
-import { createContext, useContext } from "react"
+import create from "zustand"
 import { Routes } from "constants/routes"
+import { useCallback } from "react"
+import { saveToken, deleteToken } from "utils/auth"
+import session, { SessionStorageKey } from "utils/sessionStorage"
 
-const defaultValue: {
+type AuthState = {
   isAuth: "USER" | "ADMIN" | undefined
   userLogin: (token: Token, next?: Routes) => void
   adminLogin: (token: Token, next?: Routes) => void
   logout: () => void
-} = {
-  isAuth: undefined,
-  userLogin: () => undefined,
-  adminLogin: () => undefined,
-  logout: () => undefined,
 }
-
-export const AuthContext = createContext(defaultValue)
 
 /**
  * React hook to handle user client-side authentication
  *
  * @returns a react context
  */
-const useAuth = () => useContext(AuthContext)
+const useAuth = create<AuthState>((set) => ({
+  isAuth: undefined,
+  userLogin: (token) => {
+    saveToken(token, "USER")
+    session.removeItem(SessionStorageKey.sessionTimedOut)
+    set({ isAuth: "USER" })
+  },
+  adminLogin: (token) => {
+    saveToken(token, "ADMIN")
+    session.removeItem(SessionStorageKey.sessionTimedOut)
+    set({ isAuth: "ADMIN" })
+  },
+  logout: () => {
+    deleteToken()
+    set({ isAuth: undefined })
+  },
+}))
 
 export default useAuth

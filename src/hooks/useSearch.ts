@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react"
 
-import { Input as Search, InputProps } from "commit-design"
+import { InputProps } from "commit-design"
+import { Search } from "@commitUI"
 
 /**
  * React hook to provide search functionality out of the box
