@@ -29,6 +29,7 @@ const useAuth = create<AuthState>((set) => ({
     set({ isAuth: "ADMIN" })
   },
   logout: () => {
+    console.log("adas")
     deleteToken()
     set({ isAuth: undefined })
   },
