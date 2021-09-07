@@ -18,6 +18,7 @@ import useRedirect from "hooks/useRedirect"
 
 import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
 import { FileUpload, Input, Select, TextArea } from "components/Form"
+import useSearch from "hooks/useSearch"
 
 import styles from "./AdminHome.module.scss"
 import {
@@ -106,6 +107,10 @@ const Home = () => {
     page: page.toString(),
     page_size: perPage.toString(),
   })
+  const { Search, searchProps, filteredData: data } = useSearch(
+    vouchers.results as AdminVoucher[],
+    "name"
+  )
 
   useRedirect(
     Routes.adminChangePassword,
@@ -207,11 +212,12 @@ const Home = () => {
             >
               Add Voucher
             </Button>
-            <Input name="search" label="Search" className={styles.input} />
+
+            <Search label="Search" {...searchProps} />
           </div>
 
           <Table
-            data={vouchers.results as AdminVoucher[]}
+            data={data}
             columns={columns}
             currentPage={page}
             setPage={setPage}
