@@ -1,0 +1,19 @@
+.label {
+  margin-bottom: var(--spacing-xs);
+}
+
+.inputContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .halfInput {
+    width: 40%;
+  }
+
+  .remove {
+    width: 10%;
+    height: 54px;
+  }
+}

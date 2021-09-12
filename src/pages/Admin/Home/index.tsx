@@ -19,7 +19,13 @@ import useRedirect from "hooks/useRedirect"
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
 import { Table } from "@commitUI"
 import { Modal, ModalProps, Button, Heading, Search } from "commit-design"
-import { FileUpload, Input, Select, TextArea } from "components/Form"
+import {
+  FileUpload,
+  Input,
+  Select,
+  TextArea,
+  GroupInput,
+} from "components/Form"
 import useSearch from "hooks/useSearch"
 import {
   checkDateFormat,
@@ -32,6 +38,10 @@ import { focusElementWithHotkey } from "utils/focusElement"
 
 import styles from "./AdminHome.module.scss"
 
+interface CodeEmailInput {
+  key: string
+  value: string
+}
 interface Values {
   search?: string
   availableDate: string
@@ -43,6 +53,7 @@ interface Values {
   image: string
   codeList: string
   emailList: string
+  manualCodeInputs: CodeEmailInput[]
 }
 
 const initialValues: Values = {
@@ -59,6 +70,7 @@ const initialValues: Values = {
   image: "",
   codeList: "",
   emailList: "",
+  manualCodeInputs: [{ key: "", value: "" }],
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -88,6 +100,7 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   image: yup.string().required(),
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
+  manualCodeInputs: yup.array(),
 })
 
 enum types {
@@ -295,6 +308,7 @@ const AdminVoucherModal = ({
         image: voucher?.image || "",
         codeList: "",
         emailList: "",
+        manualCodeInputs: [{ key: "", value: "" }],
       })
     }
   }, [setValues, voucher, type])
@@ -315,6 +329,7 @@ const AdminVoucherModal = ({
       title={isAdd ? "Add Voucher" : "Edit Voucher"}
       isOpen={isOpen}
       onClose={onClose}
+      size="2xl"
     >
       <Input
         name="availableDate"
@@ -375,7 +390,16 @@ const AdminVoucherModal = ({
         </>
       )}
 
-      <Button onClick={submitForm}>Submit</Button>
+      <GroupInput
+        name="manualCodeInputs"
+        label="Add individual code-email pairs"
+        keyLabel="Code"
+        valueLabel="Email"
+      />
+
+      <Button className={styles.submit} onClick={submitForm}>
+        Submit
+      </Button>
     </Modal>
   )
 }
