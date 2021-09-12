@@ -33,4 +33,8 @@
 .input {
   margin-bottom: var(--spacing-base);
 }
+
+.submit {
+  margin-top: var(--spacing-2xl);
+}
 /*# sourceMappingURL=AdminHome.module.css.map */
