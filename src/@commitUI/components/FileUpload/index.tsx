@@ -15,6 +15,7 @@ export type Props = {
   className?: string
   type?: "image" | "csv" | "pdf"
   error?: string
+  disabled?: boolean
 }
 
 const ACCEPTED = {
@@ -32,6 +33,7 @@ export const FileUpload = ({
   type,
   error,
   className,
+  disabled,
 }: Props) => {
   const [preview, setPreview] = useState<string | ArrayBuffer | null>()
   const onDropFile = useCallback((acceptedFiles: FileWithPath[]) => {
@@ -99,7 +101,8 @@ export const FileUpload = ({
   const hasFile = acceptedFiles.length || file
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container}
+      style={disabled ? {pointerEvents: "none", opacity: "0.5"}:{}}>
       <Text className={styles.label}>{label}</Text>
       <div {...getRootProps({ className: cn })}>
         {!hasFile && !preview && (

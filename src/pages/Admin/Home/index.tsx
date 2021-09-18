@@ -280,6 +280,8 @@ type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
   type?: types | null
 }
 
+var uploadDisabled = false;
+
 const AdminVoucherModal = ({
   voucher,
   type,
@@ -310,6 +312,7 @@ const AdminVoucherModal = ({
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
       })
+      uploadDisabled = voucher?.voucher_type === "No code"
     }
   }, [setValues, voucher, type])
 
@@ -323,6 +326,10 @@ const AdminVoucherModal = ({
   useEffect(() => {
     if (!type) resetForm()
   }, [type])
+
+  const handleChange = (option: any) => {
+    uploadDisabled = option === VOUCHER_TYPE_OPTIONS[1];
+  }
 
   return (
     <Modal
@@ -363,6 +370,7 @@ const AdminVoucherModal = ({
         options={VOUCHER_TYPE_OPTIONS}
         isSearchable
         className={styles.input}
+        onChange={(input: Option)=>handleChange(input)}
       />
 
       <FileUpload
@@ -372,13 +380,14 @@ const AdminVoucherModal = ({
         className={styles.upload}
       />
 
-      {!isAdd && (
+      {!isAdd &&(
         <>
           <FileUpload
             label="Upload Voucher Code List (optional)"
             type="csv"
             name="codeList"
             className={styles.upload}
+            disabled={uploadDisabled}
           />
 
           <FileUpload
@@ -386,6 +395,7 @@ const AdminVoucherModal = ({
             type="csv"
             name="emailList"
             className={styles.upload}
+            disabled={uploadDisabled}
           />
         </>
       )}
@@ -395,6 +405,7 @@ const AdminVoucherModal = ({
         label="Add individual code-email pairs"
         keyLabel="Code"
         valueLabel="Email"
+        disabled={uploadDisabled}
       />
 
       <Button className={styles.submit} onClick={submitForm}>

@@ -11,6 +11,7 @@ type Props = InputProps & {
   name: string
   keyLabel?: string
   valueLabel?: string
+  disabled?: boolean
 }
 
 export const GroupInput = ({
@@ -20,6 +21,7 @@ export const GroupInput = ({
   keyLabel,
   valueLabel,
   className,
+  disabled,
   ...props
 }: Props) => {
   const [field] = useField(name)
@@ -30,7 +32,8 @@ export const GroupInput = ({
     <FieldArray
       name={name}
       render={(arrayHelpers) => (
-        <div className={cx(styles.container, className)}>
+        <div className={cx(styles.container, className)}
+          style={disabled ? {pointerEvents: "none", opacity: "0.5"}:{}}>
           <Text className={styles.label}>{label}</Text>
           {value.map((row: { key: string; value: string }, index: number) => (
             <>
