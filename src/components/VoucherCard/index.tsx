@@ -12,6 +12,7 @@ export interface Props extends CardProps {
   voucherID: number
   style?: React.CSSProperties
   onClick?: React.MouseEventHandler<HTMLDivElement>
+  isRedeemable: boolean
 }
 
 const VoucherCard = ({
@@ -19,6 +20,7 @@ const VoucherCard = ({
   style,
   children,
   onClick,
+  isRedeemable
 }: Props): JSX.Element => {
   const { data: voucher } = useVoucher(voucherID)
   const isLoading = !voucher
@@ -46,7 +48,12 @@ const VoucherCard = ({
             )}`}</Text>
           </div>
 
-          <Text>Flash this eVoucher to redeem</Text>
+          {!isRedeemable && 
+            <Text>Flash this eVoucher to redeem</Text>}
+
+          {isRedeemable && 
+            <Text>Click this eVoucher to redeem</Text>}
+
         </div>
       </>
     </Card>

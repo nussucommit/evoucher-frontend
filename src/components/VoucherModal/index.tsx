@@ -1,24 +1,37 @@
 import React, { useState, useEffect, useLayoutEffect } from "react"
 import { Skeleton, SkeletonText } from "@chakra-ui/react"
 
+import {
+  redeemVoucher
+} from "api/voucher"
+
 import usePrevious from "hooks/usePrevious"
 import { dateToString } from "utils/date"
 
-import { Modal, ModalProps, Heading, Text } from "@commitUI/index"
+import { Modal, ModalProps, Heading, Text, Button } from "@commitUI/index"
 
 import styles from "./VoucherModal.module.css"
 
 type Props = Omit<ModalProps, "children"> & {
   voucher?: Voucher
   isValidating: boolean
+  user?: User
 }
 
-const VoucherModal = ({ voucher, isOpen, onClose, isValidating }: Props) => {
-  const currVoucher = voucher?.id
+const VoucherModal = ({ user, voucher, isOpen, onClose, isValidating }: Props) => {
+  const currVoucher = voucher?.uuid
   const prevVoucher = usePrevious(currVoucher)
   const [loading, setLoading] = useState(
     isValidating || prevVoucher !== currVoucher
   )
+
+  const handleRedeem = async () => {
+    const data = {
+      voucher: voucher?.uuid,
+      email: user?.username + "@u.nus.edu"
+    }
+    await redeemVoucher(data);
+  }
 
   // VoucherModal does not unmount when we close it, hence the loading state is not reset on each open
   // Hence we have to use useLayoutEffect to "reset" this component on every open
@@ -65,7 +78,18 @@ const VoucherModal = ({ voucher, isOpen, onClose, isValidating }: Props) => {
 
           <hr />
 
-          <Text className={styles.footer}>Flash this eVoucher to redeem.</Text>
+          {voucher?.voucher_type !== "Dinamically allocated" && 
+            <Text className={styles.footer}>Flash this eVoucher to redeem.</Text>}
+
+          {voucher?.voucher_type === "Dinamically allocated" && 
+            
+            <Button
+              className={styles.btn}
+              onClick={handleRedeem}
+              >
+              Redeem
+            </Button>}
+
         </>
       )}
     </Modal>

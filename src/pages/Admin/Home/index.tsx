@@ -381,21 +381,25 @@ const AdminVoucherModal = ({
             className={styles.upload}
           />
 
+        {voucher?.voucher_type !== "Dinamically allocated" &&
           <FileUpload
             label="Upload Voucher Email List"
             type="csv"
             name="emailList"
             className={styles.upload}
           />
+        }
         </>
       )}
 
-      <GroupInput
-        name="manualCodeInputs"
-        label="Add individual code-email pairs"
-        keyLabel="Code"
-        valueLabel="Email"
-      />
+      {voucher?.voucher_type !== "Dinamically allocated" &&
+        <GroupInput
+          name="manualCodeInputs"
+          label="Add individual code-email pairs"
+          keyLabel="Code"
+          valueLabel="Email"
+        />
+      }
 
       <Button className={styles.submit} onClick={submitForm}>
         Submit

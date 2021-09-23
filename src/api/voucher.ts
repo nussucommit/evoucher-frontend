@@ -1,3 +1,4 @@
+import { DataHTMLAttributes } from "react"
 import { getFileParts } from "utils/file"
 import request from "./request"
 import useRequest, { Config } from "./swr"
@@ -8,6 +9,15 @@ export const useVouchers = (
 ) =>
   useRequest<{ data: CodeByEmail[] }>(
     { method: "GET", url: `voucher/${email}/getCodeByEmails/` },
+    config
+  )
+
+export const useDynamicVouchers = (
+  //email: string,
+  config?: Config<{ data: DynamicCode[] }>
+) =>
+  useRequest<{ data: DynamicCode[] }>(
+    { method: "GET", url: `voucher/getDynamicVoucher/` },
     config
   )
 
@@ -81,4 +91,14 @@ export const uploadEmailList = (
     formData.append("email_list", emailListFile, emailListFile.name)
 
   request.post("voucher/email-list", formData)
+}
+
+export const redeemVoucher = ( 
+  data: Partial<RedeemableVoucher>
+) => {
+  const formData = new FormData()
+  Object.entries(data).forEach(([field, value]) => {
+    formData.append(field, value.toString())
+  })
+  return request.post("voucher/assignCodes/", formData)
 }
