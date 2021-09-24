@@ -1,12 +1,12 @@
-import DatePicker from "react-datepicker"
-
 import { Input, ExtendedInputProps } from "../Input"
 import { DATE_DISPLAY_FORMAT } from "constants/date"
+
+import DatePicker from "react-datepicker"
 
 import "react-datepicker/dist/react-datepicker.css"
 
 export interface DateInputProps extends Omit<ExtendedInputProps, "onChange"> {
-  onChange: (date:Date | [Date | null, Date | null] | null) => void
+  onChange: (date: Date | [Date | null, Date | null] | null) => void
 }
 
 export const DateInput = ({

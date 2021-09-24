@@ -13,7 +13,6 @@ export const DateInput = ({ name, label, ...props }: Props) => {
   const { setValue } = helper
   const { error, touched } = meta
 
-  console.log(field.value)
   return (
     <BaseDateInput
       {...props}
