@@ -12,7 +12,7 @@ const Home = () => {
   const { isOpen, onClose, onOpen } = useModal()
   const { data: user } = useUser();
   const { data: vouchers } = useVouchers("e0123456789@u.nus.edu") // placeholder email
-  const { data: dynamicVouchers } = useDynamicVouchers()//"e0123456789@u.nus.edu") // placeholder email
+  const { data: dynamicVouchers } = useDynamicVouchers("e0123456789@u.nus.edu") // placeholder email
   const [openVoucher, setOpenVoucher] = useState<number>(0)
   const { data: voucher, isValidating } = useVoucher(openVoucher)
   const arr = React.useMemo(() => [...Array(20)], [])
@@ -41,6 +41,7 @@ const Home = () => {
             ? vouchers.data?.map((voucher) => (
                 <VoucherCard
                   isRedeemable = {false}
+                  hasRedeemed = {true}
                   voucherID={voucher.voucher_id}
                   onClick={() => openModal(voucher.voucher_id)}
                 />
@@ -51,6 +52,7 @@ const Home = () => {
             ? dynamicVouchers.data?.map((voucher) => (
                 <VoucherCard
                   isRedeemable = {true}
+                  hasRedeemed = {false}
                   voucherID={voucher.uuid}
                   onClick={() => openModal(voucher.uuid)}
                 />
@@ -65,6 +67,7 @@ const Home = () => {
         voucher={voucher}
         isValidating={isValidating}
         user={user}
+        hasRedeemed = {true}
       />
     </>
   )

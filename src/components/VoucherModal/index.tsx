@@ -16,9 +16,10 @@ type Props = Omit<ModalProps, "children"> & {
   voucher?: Voucher
   isValidating: boolean
   user?: User
+  hasRedeemed: boolean
 }
 
-const VoucherModal = ({ user, voucher, isOpen, onClose, isValidating }: Props) => {
+const VoucherModal = ({ hasRedeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
   const currVoucher = voucher?.uuid
   const prevVoucher = usePrevious(currVoucher)
   const [loading, setLoading] = useState(
@@ -89,6 +90,15 @@ const VoucherModal = ({ user, voucher, isOpen, onClose, isValidating }: Props) =
               >
               Redeem
             </Button>}
+
+            {/*voucher?.voucher_type === "Dinamically allocated" && 
+            
+            <Button
+              className={styles.btn}
+              disabled = {true}
+              >
+              Voucher has aleady been redeemed
+            </Button>*/}
 
         </>
       )}

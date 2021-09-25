@@ -13,11 +13,11 @@ export const useVouchers = (
   )
 
 export const useDynamicVouchers = (
-  //email: string,
+  email: string,
   config?: Config<{ data: DynamicCode[] }>
 ) =>
   useRequest<{ data: DynamicCode[] }>(
-    { method: "GET", url: `voucher/getDynamicVoucher/` },
+    { method: "GET", url: `voucher/getDynamicVoucher/${email}/` },
     config
   )
 
