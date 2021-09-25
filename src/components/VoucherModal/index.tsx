@@ -16,10 +16,10 @@ type Props = Omit<ModalProps, "children"> & {
   voucher?: Voucher
   isValidating: boolean
   user?: User
-  hasRedeemed: boolean
+  redeemed?: String[] | undefined
 }
 
-const VoucherModal = ({ hasRedeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
+const VoucherModal = ({ redeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
   const currVoucher = voucher?.uuid
   const prevVoucher = usePrevious(currVoucher)
   const [loading, setLoading] = useState(
@@ -31,6 +31,7 @@ const VoucherModal = ({ hasRedeemed, user, voucher, isOpen, onClose, isValidatin
       voucher: voucher?.uuid,
       email: user?.username + "@u.nus.edu"
     }
+    window.location.reload();
     await redeemVoucher(data);
   }
 
@@ -82,7 +83,7 @@ const VoucherModal = ({ hasRedeemed, user, voucher, isOpen, onClose, isValidatin
           {voucher?.voucher_type !== "Dinamically allocated" && 
             <Text className={styles.footer}>Flash this eVoucher to redeem.</Text>}
 
-          {voucher?.voucher_type === "Dinamically allocated" && 
+          {voucher?.voucher_type === "Dinamically allocated" &&  !redeemed?.includes(voucher?.uuid || "") &&
             
             <Button
               className={styles.btn}
@@ -91,14 +92,14 @@ const VoucherModal = ({ hasRedeemed, user, voucher, isOpen, onClose, isValidatin
               Redeem
             </Button>}
 
-            {/*voucher?.voucher_type === "Dinamically allocated" && 
+            {voucher?.voucher_type === "Dinamically allocated" && redeemed?.includes(voucher?.uuid || "") && 
             
             <Button
               className={styles.btn}
               disabled = {true}
               >
               Voucher has aleady been redeemed
-            </Button>*/}
+            </Button>}
 
         </>
       )}

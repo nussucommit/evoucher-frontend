@@ -14,9 +14,9 @@ export const useVouchers = (
 
 export const useDynamicVouchers = (
   email: string,
-  config?: Config<{ data: DynamicCode[] }>
+  config?: Config<{ unredeemed: DynamicCode[], redeemed: string[] }>
 ) =>
-  useRequest<{ data: DynamicCode[] }>(
+  useRequest<{ unredeemed: DynamicCode[],  redeemed: string[] }>(
     { method: "GET", url: `voucher/getDynamicVoucher/${email}/` },
     config
   )

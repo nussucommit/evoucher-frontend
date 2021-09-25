@@ -48,8 +48,8 @@ const Home = () => {
               ))
             : arr.map(() => <VoucherCardSkeleton />)}
 
-          {dynamicVouchers?.data
-            ? dynamicVouchers.data?.map((voucher) => (
+          {dynamicVouchers?.unredeemed
+            ? dynamicVouchers.unredeemed?.map((voucher) => (
                 <VoucherCard
                   isRedeemable = {true}
                   hasRedeemed = {false}
@@ -67,7 +67,7 @@ const Home = () => {
         voucher={voucher}
         isValidating={isValidating}
         user={user}
-        hasRedeemed = {true}
+        redeemed = {dynamicVouchers?.redeemed}
       />
     </>
   )
