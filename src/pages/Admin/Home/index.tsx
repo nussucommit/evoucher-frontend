@@ -16,12 +16,6 @@ import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 import useRedirect from "hooks/useRedirect"
 
-<<<<<<< HEAD
-import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
-import { FileUpload, Input, Select, TextArea, DateInput } from "components/Form"
-
-import styles from "./AdminHome.module.scss"
-=======
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
 import { Table } from "@commitUI"
 import { Modal, ModalProps, Button, Heading, Search } from "commit-design"
@@ -31,9 +25,9 @@ import {
   Select,
   TextArea,
   GroupInput,
+  DateInput
 } from "components/Form"
 import useSearch from "hooks/useSearch"
->>>>>>> main
 import {
   checkDateFormat,
   displayDate,
