@@ -11,8 +11,8 @@ import Navbar from "components/Navbar"
 const Home = () => {
   const { isOpen, onClose, onOpen } = useModal()
   const { data: user } = useUser();
-  const { data: vouchers } = useVouchers("e0123456789@u.nus.edu") // placeholder email
-  const { data: dynamicVouchers } = useDynamicVouchers("e0123456789@u.nus.edu") // placeholder email
+  const { data: vouchers, mutate: mutateVouchers } = useVouchers("e0123456789@u.nus.edu") // placeholder email
+  const { data: dynamicVouchers, mutate: mutateDynamicVouchers } = useDynamicVouchers("e0123456789@u.nus.edu") // placeholder email
   const [openVoucher, setOpenVoucher] = useState<number>(0)
   const { data: voucher, isValidating } = useVoucher(openVoucher)
   const arr = React.useMemo(() => [...Array(20)], [])
@@ -20,6 +20,13 @@ const Home = () => {
   //   useEffect(() => {
   //     if (openVoucher === 0) revalidate()
   //   })
+
+  
+  const onCloseHandler = () => {
+    onClose()
+    mutateDynamicVouchers()
+    mutateVouchers()
+  }
 
   const openModal = (voucherID: number) => {
     if (voucherID !== openVoucher) {
@@ -68,6 +75,7 @@ const Home = () => {
         isValidating={isValidating}
         user={user}
         redeemed = {dynamicVouchers?.redeemed}
+        onCloseHandler = {onCloseHandler}
       />
     </>
   )

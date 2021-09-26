@@ -17,9 +17,10 @@ type Props = Omit<ModalProps, "children"> & {
   isValidating: boolean
   user?: User
   redeemed?: String[] | undefined
+  onCloseHandler: VoidFunction
 }
 
-const VoucherModal = ({ redeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
+const VoucherModal = ({ onCloseHandler, redeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
   const currVoucher = voucher?.uuid
   const prevVoucher = usePrevious(currVoucher)
   const [loading, setLoading] = useState(
@@ -32,8 +33,7 @@ const VoucherModal = ({ redeemed, user, voucher, isOpen, onClose, isValidating }
       email: user?.username + "@u.nus.edu"
     }
     await redeemVoucher(data).then(() =>
-      window.location.reload()
-      //onClose()
+      onCloseHandler()
     );
   }
 
