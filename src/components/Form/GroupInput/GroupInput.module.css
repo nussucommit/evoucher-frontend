@@ -23,4 +23,9 @@
   width: 10%;
   height: 54px;
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
 /*# sourceMappingURL=GroupInput.module.css.map */

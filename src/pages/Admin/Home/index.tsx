@@ -25,6 +25,7 @@ import {
   Select,
   TextArea,
   GroupInput,
+  DateInput
 } from "components/Form"
 import useSearch from "hooks/useSearch"
 import {
@@ -337,13 +338,13 @@ const AdminVoucherModal = ({
       onClose={onClose}
       size="2xl"
     >
-      <Input
+      <DateInput
         name="availableDate"
         label="Available Date (DD/MM/YYYY)"
         className={styles.input}
       />
 
-      <Input
+      <DateInput
         name="expiryDate"
         label="Expiry Date (DD/MM/YYYY)"
         className={styles.input}

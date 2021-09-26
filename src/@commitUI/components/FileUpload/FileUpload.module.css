@@ -61,9 +61,6 @@
   font-weight: bold;
 }
 
-/* This is a temporary fix, kevin or edward, pls update commitUI package,
-    I think disable feature is quite useful. Some of the components do not
-    support them, for some reasons lul*/
 .disabled {
   pointer-events: none;
   opacity: 0.5;
