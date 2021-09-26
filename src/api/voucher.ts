@@ -64,7 +64,7 @@ export const uploadCodeList = (
   if (codeListFile)
     formData.append("code_list", codeListFile, codeListFile.name)
 
-  request.post("voucher/code-list", formData)
+  return request.post("voucher/code-list", formData)
 }
 
 export const uploadEmailList = (

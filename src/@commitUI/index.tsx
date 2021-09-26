@@ -25,5 +25,9 @@ export { FileUpload } from "./components/FileUpload"
 export type { Props as FileUploadProps } from "./components/FileUpload"
 export { TextArea } from "./components/TextArea"
 export type { ExtendedTextAreaProps as TextAreaProps } from "./components/TextArea"
+<<<<<<< HEAD
 export { DateInput } from "./components/DateInput"
 export type { DateInputProps } from "./components/DateInput"
+=======
+export { Search } from "./components/Search"
+>>>>>>> main

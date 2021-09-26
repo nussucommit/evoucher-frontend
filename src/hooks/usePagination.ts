@@ -6,7 +6,9 @@ export type Pagination = {
   perPage: number
   setPerPage: Dispatch<SetStateAction<number>>
 }
-
+/**
+ * React hook to handle table pagination
+ */
 const usePagination = (): Pagination => {
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)

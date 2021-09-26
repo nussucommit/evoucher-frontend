@@ -8,6 +8,9 @@ export type RequestState = {
   end: () => void
 }
 
+/**
+ * React hook to keep track of state when making requests (API calls)
+ */
 const useRequestState = (): RequestState => {
   const [loading, setLoading] = useState(false)
   const [error, setErrorState] = useState<string>()

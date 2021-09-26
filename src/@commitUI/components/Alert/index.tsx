@@ -6,7 +6,7 @@ import {
   CloseButton,
 } from "@chakra-ui/react"
 
-import { Text } from "@commitUI/index"
+import { Text } from "../Text"
 
 import cx from "classnames"
 

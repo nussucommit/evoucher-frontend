@@ -15,6 +15,7 @@ export type Props = {
   className?: string
   type?: "image" | "csv" | "pdf"
   error?: string
+  disabled?: boolean
 }
 
 const ACCEPTED = {
@@ -32,6 +33,7 @@ export const FileUpload = ({
   type,
   error,
   className,
+  disabled,
 }: Props) => {
   const [preview, setPreview] = useState<string | ArrayBuffer | null>()
   const onDropFile = useCallback((acceptedFiles: FileWithPath[]) => {
@@ -91,6 +93,13 @@ export const FileUpload = ({
     className
   )
 
+  const mainContainer = cx(
+    styles.container,
+    {
+      [styles.disabled]: disabled
+    }
+  )
+
   const removeFile = () => {
     acceptedFiles.splice(0, 1) // remove the file from the array
     setFile("")
@@ -99,27 +108,22 @@ export const FileUpload = ({
   const hasFile = acceptedFiles.length || file
 
   return (
-    <div className={styles.container}>
+    <div className={mainContainer}>
       <Text className={styles.label}>{label}</Text>
       <div {...getRootProps({ className: cn })}>
-        {!hasFile && (
+        {!hasFile && !preview && (
           <Text className={styles.info}>
             Click here or drag your file to upload!
           </Text>
         )}
         <input {...getInputProps()} />
-        {acceptedFiles.length && (
-          <>
-            {preview ? (
-              <img src={preview as string} alt="preview" />
-            ) : (
-              <Text>{acceptedFiles[0].name}</Text>
-            )}
-          </>
+        {preview ? (
+          <img src={preview as string} alt="preview" />
+        ) : (
+          <Text>{acceptedFiles[0]?.name}</Text>
         )}
-        {preview && <img src={preview as string} alt="preview" />}
         {/* <div>{data && <img src={`data:image/jpeg;base64,${data}`} />}</div> */}
-        {acceptedFiles.length ? (
+        {acceptedFiles.length || preview ? (
           <Button type="text" onClick={removeFile} className={styles.remove}>
             <Text className={styles.removeText}>Remove</Text>
           </Button>

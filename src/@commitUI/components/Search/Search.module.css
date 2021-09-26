@@ -1,0 +1,33 @@
+.container {
+  position: relative;
+}
+
+.container input {
+  border-radius: 8px;
+  border: var(--gray-lines) 1px solid;
+  padding: var(--spacing-base) var(--spacing-base) var(--spacing-base) 48px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  -webkit-transition: 150ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  transition: 150ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.container input:hover {
+  border: var(--gray-lighter) 1px solid;
+}
+
+.container input:focus {
+  -webkit-box-shadow: 0 0 0 3px #79b1ff;
+          box-shadow: 0 0 0 3px #79b1ff;
+}
+
+.searchIcon {
+  position: absolute;
+  top: var(--spacing-base);
+  left: var(--spacing-base);
+}
+/*# sourceMappingURL=Search.module.css.map */

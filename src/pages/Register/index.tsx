@@ -1,6 +1,7 @@
 import React from "react"
 import { Formik, Form, FormikHelpers } from "formik"
 import * as yup from "yup"
+import { AxiosError } from "axios"
 
 import { Routes } from "constants/routes"
 import { register } from "api/auth"
@@ -15,7 +16,6 @@ import LinkButton from "components/LinkButton"
 import styles from "./Register.module.css"
 import logo from "../../assets/images/logo.png"
 import logo2 from "assets/images/logo2.jpeg"
-import { AxiosError } from "axios"
 
 type Option = {
   value: string | number
@@ -111,7 +111,12 @@ const Register = () => {
           onSubmit={handleRegister}
         >
           <Form>
-            <Input name="name" label="Name" className={styles.input} />
+            <Input
+              autoFocus
+              name="name"
+              label="Name"
+              className={styles.input}
+            />
 
             <div className={styles.halfInputContainer}>
               <Input

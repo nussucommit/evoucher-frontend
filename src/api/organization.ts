@@ -33,5 +33,5 @@ export const updateOrganization = (
   name: string,
   data: Partial<Organization>
 ) => {
-  request.patch(`organization/${name}`, data)
+  return request.patch(`organization/${name}`, data)
 }

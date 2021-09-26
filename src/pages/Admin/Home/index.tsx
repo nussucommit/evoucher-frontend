@@ -16,10 +16,24 @@ import usePagination from "hooks/usePagination"
 import { VOUCHER_TYPE_OPTIONS } from "constants/options"
 import useRedirect from "hooks/useRedirect"
 
+<<<<<<< HEAD
 import { Table, Modal, ModalProps, Button, Heading } from "@commitUI"
 import { FileUpload, Input, Select, TextArea, DateInput } from "components/Form"
 
 import styles from "./AdminHome.module.scss"
+=======
+// To-do: Divide Table into two components, UI in commit-design and functionality in local /components
+import { Table } from "@commitUI"
+import { Modal, ModalProps, Button, Heading, Search } from "commit-design"
+import {
+  FileUpload,
+  Input,
+  Select,
+  TextArea,
+  GroupInput,
+} from "components/Form"
+import useSearch from "hooks/useSearch"
+>>>>>>> main
 import {
   checkDateFormat,
   displayDate,
@@ -27,8 +41,16 @@ import {
   toDateObject,
 } from "utils/date"
 import { isSameFileUrl } from "utils/file"
+import { focusElementWithHotkey } from "utils/focusElement"
 
+import styles from "./AdminHome.module.scss"
+
+interface CodeEmailInput {
+  key: string
+  value: string
+}
 interface Values {
+  search?: string
   availableDate: string
   expiryDate: string
   name: string
@@ -38,9 +60,11 @@ interface Values {
   image: string
   codeList: string
   emailList: string
+  manualCodeInputs: CodeEmailInput[]
 }
 
 const initialValues: Values = {
+  search: "",
   availableDate: "",
   expiryDate: "",
   name: "",
@@ -53,9 +77,11 @@ const initialValues: Values = {
   image: "",
   codeList: "",
   emailList: "",
+  manualCodeInputs: [{ key: "", value: "" }],
 }
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
+  search: yup.string().default(""),
   availableDate: yup
     .string()
     .test("valid format", "Invalid date format", (date) =>
@@ -81,6 +107,7 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   image: yup.string().required(),
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
+  manualCodeInputs: yup.array(),
 })
 
 enum types {
@@ -103,11 +130,20 @@ const Home = () => {
     page: page.toString(),
     page_size: perPage.toString(),
   })
+  const { searchProps, filteredData: data } = useSearch(
+    vouchers.results as AdminVoucher[],
+    "name"
+  )
 
   useRedirect(
     Routes.adminChangePassword,
-    Boolean(organization?.is_first_time_login)
+    Boolean(organization) && organization!.is_first_time_login
   )
+
+  useEffect(() => {
+    const closeEventListener = focusElementWithHotkey("#search", "/")
+    return closeEventListener
+  })
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
@@ -152,7 +188,6 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
-    // To-do: CHECK DATE FORMAT!! MONTH AND DAY IS FLIPPED
     const data = {
       posted_date: formatDate(new Date()),
       available_date: formatDate(toDateObject(values.availableDate)),
@@ -198,12 +233,23 @@ const Home = () => {
         <Heading level={1}>{`${organization?.name}'s Voucher List`}</Heading>
 
         <div className={styles.content}>
-          <Button onClick={() => setOpen(types.ADD)} className={styles.addBtn}>
-            Add Voucher
-          </Button>
+          <div className={styles.topContent}>
+            <Button
+              onClick={() => setOpen(types.ADD)}
+              className={styles.addBtn}
+            >
+              Add Voucher
+            </Button>
+
+            <Search
+              id="search"
+              placeholder="Search (Press / )"
+              {...searchProps}
+            />
+          </div>
 
           <Table
-            data={vouchers.results as AdminVoucher[]}
+            data={data}
             columns={columns}
             currentPage={page}
             setPage={setPage}
@@ -246,6 +292,7 @@ const AdminVoucherModal = ({
   type,
   onClose,
 }: AdminVoucherModalProps) => {
+  const [isUploadDisabled, setIsUploadDisabled] = useState(false)
   const {
     setValues,
     submitForm,
@@ -269,7 +316,9 @@ const AdminVoucherModal = ({
         image: voucher?.image || "",
         codeList: "",
         emailList: "",
+        manualCodeInputs: [{ key: "", value: "" }],
       })
+      setIsUploadDisabled(voucher?.voucher_type === "No code")
     }
   }, [setValues, voucher, type])
 
@@ -284,11 +333,16 @@ const AdminVoucherModal = ({
     if (!type) resetForm()
   }, [type])
 
+  const handleChange = (option: any) => {
+    setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
+  }
+
   return (
     <Modal
       title={isAdd ? "Add Voucher" : "Edit Voucher"}
       isOpen={isOpen}
       onClose={onClose}
+      size="2xl"
     >
       <DateInput
         name="availableDate"
@@ -322,6 +376,7 @@ const AdminVoucherModal = ({
         options={VOUCHER_TYPE_OPTIONS}
         isSearchable
         className={styles.input}
+        onChange={(input: Option) => handleChange(input)}
       />
 
       <FileUpload
@@ -338,6 +393,7 @@ const AdminVoucherModal = ({
             type="csv"
             name="codeList"
             className={styles.upload}
+            disabled={isUploadDisabled}
           />
 
           <FileUpload
@@ -345,11 +401,22 @@ const AdminVoucherModal = ({
             type="csv"
             name="emailList"
             className={styles.upload}
+            disabled={isUploadDisabled}
           />
         </>
       )}
 
-      <Button onClick={submitForm}>Submit</Button>
+      <GroupInput
+        name="manualCodeInputs"
+        label="Add individual code-email pairs"
+        keyLabel="Code"
+        valueLabel="Email"
+        disabled={isUploadDisabled}
+      />
+
+      <Button className={styles.submit} onClick={submitForm}>
+        Submit
+      </Button>
     </Modal>
   )
 }

@@ -5,6 +5,12 @@
     margin-top: var(--spacing-2xl);
   }
 
+  .topContent {
+    display: flex;
+    justify-content: space-between;
+    margin-right: var(--spacing-2xl);
+  }
+
   .addBtn {
     width: 10vw;
   }
@@ -23,4 +29,8 @@
 
 .input {
   margin-bottom: var(--spacing-base);
+}
+
+.submit {
+  margin-top: var(--spacing-2xl);
 }

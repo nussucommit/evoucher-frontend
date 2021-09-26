@@ -1,0 +1,26 @@
+.label {
+  margin-bottom: var(--spacing-xs);
+}
+
+.inputContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.inputContainer .halfInput {
+  width: 40%;
+}
+
+.inputContainer .remove {
+  width: 10%;
+  height: 54px;
+}
+/*# sourceMappingURL=GroupInput.module.css.map */
