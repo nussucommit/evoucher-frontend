@@ -17,3 +17,8 @@
     height: 54px;
   }
 }
+
+.disabled{
+  pointer-events: none;
+  opacity: 0.5;
+}

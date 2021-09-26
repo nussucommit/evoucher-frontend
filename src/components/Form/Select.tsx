@@ -7,11 +7,15 @@ type Props = Omit<SelectProps, "onBlur" | "onChange"> & {
   name: string
 }
 
-export const Select = ({ name, label, ...props }: Props) => {
+export const Select = ({ name, label, onChange: onChangeProps, ...props }: Props) => {
   const [field, meta, helper] = useField(name)
   const { onBlur } = field
   const { setValue } = helper
   const { error, touched } = meta
+  const onChange = (option: Option) => {
+    onChangeProps(option);
+    setValue(option);
+  }
 
   return (
     <BaseSelect
@@ -20,7 +24,7 @@ export const Select = ({ name, label, ...props }: Props) => {
       id={name}
       label={label}
       error={touched && error ? error : ""}
-      onChange={(option: Option) => setValue(option)}
+      onChange={onChange}
       onBlur={onBlur}
     />
   )
