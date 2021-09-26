@@ -93,6 +93,13 @@ export const FileUpload = ({
     className
   )
 
+  const mainContainer = cx(
+    styles.container,
+    {
+      [styles.disabled]: disabled
+    }
+  )
+
   const removeFile = () => {
     acceptedFiles.splice(0, 1) // remove the file from the array
     setFile("")
@@ -101,8 +108,7 @@ export const FileUpload = ({
   const hasFile = acceptedFiles.length || file
 
   return (
-    <div className={styles.container}
-      style={disabled ? {pointerEvents: "none", opacity: "0.5"}:{}}>
+    <div className={mainContainer}>
       <Text className={styles.label}>{label}</Text>
       <div {...getRootProps({ className: cn })}>
         {!hasFile && !preview && (

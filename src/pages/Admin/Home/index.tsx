@@ -280,13 +280,12 @@ type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
   type?: types | null
 }
 
-var uploadDisabled = false;
-
 const AdminVoucherModal = ({
   voucher,
   type,
   onClose,
 }: AdminVoucherModalProps) => {
+  const [isUploadDisabled, setIsUploadDisabled] = useState(false)
   const {
     setValues,
     submitForm,
@@ -312,7 +311,7 @@ const AdminVoucherModal = ({
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
       })
-      uploadDisabled = voucher?.voucher_type === "No code"
+      setIsUploadDisabled(voucher?.voucher_type === "No code")
     }
   }, [setValues, voucher, type])
 
@@ -328,7 +327,7 @@ const AdminVoucherModal = ({
   }, [type])
 
   const handleChange = (option: any) => {
-    uploadDisabled = option === VOUCHER_TYPE_OPTIONS[1];
+    setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
   }
 
   return (
@@ -370,7 +369,7 @@ const AdminVoucherModal = ({
         options={VOUCHER_TYPE_OPTIONS}
         isSearchable
         className={styles.input}
-        onChange={(input: Option)=>handleChange(input)}
+        onChange={(input: Option) => handleChange(input)}
       />
 
       <FileUpload
@@ -380,14 +379,14 @@ const AdminVoucherModal = ({
         className={styles.upload}
       />
 
-      {!isAdd &&(
+      {!isAdd && (
         <>
           <FileUpload
             label="Upload Voucher Code List (optional)"
             type="csv"
             name="codeList"
             className={styles.upload}
-            disabled={uploadDisabled}
+            disabled={isUploadDisabled}
           />
 
           <FileUpload
@@ -395,7 +394,7 @@ const AdminVoucherModal = ({
             type="csv"
             name="emailList"
             className={styles.upload}
-            disabled={uploadDisabled}
+            disabled={isUploadDisabled}
           />
         </>
       )}
@@ -405,7 +404,7 @@ const AdminVoucherModal = ({
         label="Add individual code-email pairs"
         keyLabel="Code"
         valueLabel="Email"
-        disabled={uploadDisabled}
+        disabled={isUploadDisabled}
       />
 
       <Button className={styles.submit} onClick={submitForm}>

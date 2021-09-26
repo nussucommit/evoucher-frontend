@@ -28,12 +28,19 @@ export const GroupInput = ({
   const { value } = field
   console.log(value)
 
+  const container = cx(
+    styles.container,
+    className,
+    {
+      [styles.disabled]: disabled
+    }
+  )
+
   return (
     <FieldArray
       name={name}
       render={(arrayHelpers) => (
-        <div className={cx(styles.container, className)}
-          style={disabled ? {pointerEvents: "none", opacity: "0.5"}:{}}>
+        <div className={container}>
           <Text className={styles.label}>{label}</Text>
           {value.map((row: { key: string; value: string }, index: number) => (
             <>
