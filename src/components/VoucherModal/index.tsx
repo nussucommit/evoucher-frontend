@@ -31,8 +31,10 @@ const VoucherModal = ({ redeemed, user, voucher, isOpen, onClose, isValidating }
       voucher: voucher?.uuid,
       email: user?.username + "@u.nus.edu"
     }
-    window.location.reload();
-    await redeemVoucher(data);
+    await redeemVoucher(data).then(() =>
+      window.location.reload()
+      //onClose()
+    );
   }
 
   // VoucherModal does not unmount when we close it, hence the loading state is not reset on each open
@@ -98,7 +100,7 @@ const VoucherModal = ({ redeemed, user, voucher, isOpen, onClose, isValidating }
               className={styles.btn}
               disabled = {true}
               >
-              Voucher has aleady been redeemed
+              Voucher has already been redeemed
             </Button>}
 
         </>
