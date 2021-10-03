@@ -6,7 +6,9 @@ import {
 } from "api/voucher"
 
 import usePrevious from "hooks/usePrevious"
+import { useUser } from "api/user"
 import { dateToString } from "utils/date"
+import { Emails } from "constants/email"
 
 import { Modal, ModalProps, Heading, Text, Button } from "@commitUI/index"
 
@@ -15,22 +17,24 @@ import styles from "./VoucherModal.module.css"
 type Props = Omit<ModalProps, "children"> & {
   voucher?: Voucher
   isValidating: boolean
-  user?: User
   redeemed?: String[] | undefined
-  onCloseHandler: VoidFunction
+  onCloseHandler: () => void
 }
 
-const VoucherModal = ({ onCloseHandler, redeemed, user, voucher, isOpen, onClose, isValidating }: Props) => {
+const VoucherModal = ({ onCloseHandler, redeemed, voucher, isOpen, onClose, isValidating }: Props) => {
+  const { data: user } = useUser();
   const currVoucher = voucher?.uuid
   const prevVoucher = usePrevious(currVoucher)
   const [loading, setLoading] = useState(
     isValidating || prevVoucher !== currVoucher
   )
+  const isRedeemed = redeemed?.includes(voucher?.uuid || "")
+  const isDynamic = voucher?.voucher_type === "Dinamically allocated"
 
   const handleRedeem = async () => {
     const data = {
       voucher: voucher?.uuid,
-      email: user?.username + "@u.nus.edu"
+      email: user?.username + Emails.studentDomain
     }
     await redeemVoucher(data).then(() =>
       onCloseHandler()
@@ -82,10 +86,10 @@ const VoucherModal = ({ onCloseHandler, redeemed, user, voucher, isOpen, onClose
 
           <hr />
 
-          {voucher?.voucher_type !== "Dinamically allocated" && 
+          {isDynamic && 
             <Text className={styles.footer}>Flash this eVoucher to redeem.</Text>}
 
-          {voucher?.voucher_type === "Dinamically allocated" &&  !redeemed?.includes(voucher?.uuid || "") &&
+          {isDynamic &&  !isRedeemed &&
             
             <Button
               className={styles.btn}
@@ -94,7 +98,7 @@ const VoucherModal = ({ onCloseHandler, redeemed, user, voucher, isOpen, onClose
               Redeem
             </Button>}
 
-            {voucher?.voucher_type === "Dinamically allocated" && redeemed?.includes(voucher?.uuid || "") && 
+            {isDynamic && isRedeemed && 
             
             <Button
               className={styles.btn}

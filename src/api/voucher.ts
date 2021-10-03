@@ -1,4 +1,3 @@
-import { DataHTMLAttributes } from "react"
 import { getFileParts } from "utils/file"
 import request from "./request"
 import useRequest, { Config } from "./swr"

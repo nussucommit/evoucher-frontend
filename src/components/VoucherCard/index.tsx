@@ -50,7 +50,7 @@ const VoucherCard = ({
             )}`}</Text>
           </div>
 
-          {!isRedeemable && hasRedeemed &&
+          {(!isRedeemable || hasRedeemed) &&
             <Text>Flash this eVoucher to redeem</Text>}
 
           {isRedeemable && !hasRedeemed &&
