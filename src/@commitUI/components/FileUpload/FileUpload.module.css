@@ -60,4 +60,9 @@
   color: var(--danger);
   font-weight: bold;
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
 /*# sourceMappingURL=FileUpload.module.css.map */

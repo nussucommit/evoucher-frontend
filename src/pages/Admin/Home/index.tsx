@@ -25,6 +25,7 @@ import {
   Select,
   TextArea,
   GroupInput,
+  DateInput
 } from "components/Form"
 import useSearch from "hooks/useSearch"
 import {
@@ -285,6 +286,7 @@ const AdminVoucherModal = ({
   type,
   onClose,
 }: AdminVoucherModalProps) => {
+  const [isUploadDisabled, setIsUploadDisabled] = useState(false)
   const {
     setValues,
     submitForm,
@@ -310,6 +312,7 @@ const AdminVoucherModal = ({
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
       })
+      setIsUploadDisabled(voucher?.voucher_type === "No code")
     }
   }, [setValues, voucher, type])
 
@@ -324,6 +327,10 @@ const AdminVoucherModal = ({
     if (!type) resetForm()
   }, [type])
 
+  const handleChange = (option: any) => {
+    setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
+  }
+
   return (
     <Modal
       title={isAdd ? "Add Voucher" : "Edit Voucher"}
@@ -331,13 +338,13 @@ const AdminVoucherModal = ({
       onClose={onClose}
       size="2xl"
     >
-      <Input
+      <DateInput
         name="availableDate"
         label="Available Date (DD/MM/YYYY)"
         className={styles.input}
       />
 
-      <Input
+      <DateInput
         name="expiryDate"
         label="Expiry Date (DD/MM/YYYY)"
         className={styles.input}
@@ -363,6 +370,7 @@ const AdminVoucherModal = ({
         options={VOUCHER_TYPE_OPTIONS}
         isSearchable
         className={styles.input}
+        onChange={(input: Option) => handleChange(input)}
       />
 
       <FileUpload
@@ -379,6 +387,7 @@ const AdminVoucherModal = ({
             type="csv"
             name="codeList"
             className={styles.upload}
+            disabled={isUploadDisabled}
           />
 
         {voucher?.voucher_type !== "Dinamically allocated" &&
@@ -387,19 +396,20 @@ const AdminVoucherModal = ({
             type="csv"
             name="emailList"
             className={styles.upload}
+            disabled={isUploadDisabled}
           />
         }
         </>
       )}
-
-      {voucher?.voucher_type !== "Dinamically allocated" &&
-        <GroupInput
-          name="manualCodeInputs"
-          label="Add individual code-email pairs"
-          keyLabel="Code"
-          valueLabel="Email"
-        />
-      }
+    {voucher?.voucher_type !== "Dinamically allocated" &&
+      <GroupInput
+        name="manualCodeInputs"
+        label="Add individual code-email pairs"
+        keyLabel="Code"
+        valueLabel="Email"
+        disabled={isUploadDisabled}
+      />
+    }
 
       <Button className={styles.submit} onClick={submitForm}>
         Submit
