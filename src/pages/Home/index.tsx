@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
 import useModal from "hooks/useModal"
-import { useVoucher, useVouchers } from "api/voucher"
+import { useDynamicVouchers, useVoucher, useVouchers } from "api/voucher"
 
 import VoucherCard, { VoucherCardSkeleton } from "components/VoucherCard"
 import VoucherModal from "components/VoucherModal"
@@ -9,7 +9,8 @@ import Navbar from "components/Navbar"
 
 const Home = () => {
   const { isOpen, onClose, onOpen } = useModal()
-  const { data: vouchers } = useVouchers("e0412934@u.nus.edu") // placeholder email
+  const { data: vouchers, mutate: mutateVouchers } = useVouchers("e0123456789@u.nus.edu") // placeholder email
+  const { data: dynamicVouchers, mutate: mutateDynamicVouchers } = useDynamicVouchers("e0123456789@u.nus.edu") // placeholder email
   const [openVoucher, setOpenVoucher] = useState<number>(0)
   const { data: voucher, isValidating } = useVoucher(openVoucher)
   const arr = React.useMemo(() => [...Array(20)], [])
@@ -17,6 +18,13 @@ const Home = () => {
   //   useEffect(() => {
   //     if (openVoucher === 0) revalidate()
   //   })
+
+  
+  const onCloseHandler = () => {
+    onClose()
+    mutateDynamicVouchers()
+    mutateVouchers()
+  }
 
   const openModal = (voucherID: number) => {
     if (voucherID !== openVoucher) {
@@ -37,8 +45,21 @@ const Home = () => {
           {vouchers?.data
             ? vouchers.data?.map((voucher) => (
                 <VoucherCard
+                  isRedeemable={false}
+                  hasRedeemed
                   voucherID={voucher.voucher_id}
                   onClick={() => openModal(voucher.voucher_id)}
+                />
+              ))
+            : arr.map(() => <VoucherCardSkeleton />)}
+
+          {dynamicVouchers?.unredeemed
+            ? dynamicVouchers.unredeemed?.map((voucher) => (
+                <VoucherCard
+                  isRedeemable
+                  hasRedeemed={false}
+                  voucherID={voucher.uuid}
+                  onClick={() => openModal(voucher.uuid)}
                 />
               ))
             : arr.map(() => <VoucherCardSkeleton />)}
@@ -50,6 +71,8 @@ const Home = () => {
         isOpen={isOpen}
         voucher={voucher}
         isValidating={isValidating}
+        redeemed={dynamicVouchers?.redeemed}
+        onCloseHandler={onCloseHandler}
       />
     </>
   )

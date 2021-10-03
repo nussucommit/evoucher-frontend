@@ -11,6 +11,15 @@ export const useVouchers = (
     config
   )
 
+export const useDynamicVouchers = (
+  email: string,
+  config?: Config<{ unredeemed: DynamicCode[], redeemed: string[] }>
+) =>
+  useRequest<{ unredeemed: DynamicCode[],  redeemed: string[] }>(
+    { method: "GET", url: `voucher/getDynamicVoucher/${email}/` },
+    config
+  )
+
 export const useVoucher = (voucherID: number, config?: Config<Voucher>) =>
   useRequest<Voucher>({ method: "GET", url: `voucher/${voucherID}` }, config)
 
@@ -81,4 +90,14 @@ export const uploadEmailList = (
     formData.append("email_list", emailListFile, emailListFile.name)
 
   request.post("voucher/email-list", formData)
+}
+
+export const redeemVoucher = ( 
+  data: Partial<RedeemableVoucher>
+) => {
+  const formData = new FormData()
+  Object.entries(data).forEach(([field, value]) => {
+    formData.append(field, value.toString())
+  })
+  return request.post("voucher/assignCodes/", formData)
 }

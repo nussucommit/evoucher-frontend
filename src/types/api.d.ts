@@ -6,7 +6,7 @@ interface Token {
 }
 
 interface Voucher {
-  id: string
+  uuid: string
   posted_date: string
   available_date: string
   expiry_date: string
@@ -24,6 +24,17 @@ interface CodeByEmail {
   voucher_id: number
   code_id: number
   email_id: number
+}
+
+interface DynamicCode {
+  id: string
+  uuid: number
+  code_id: number
+}
+
+interface RedeemableVoucher {
+  id?: string
+  email: string
 }
 
 type AdminVoucherFiles = {
