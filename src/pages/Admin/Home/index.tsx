@@ -1,60 +1,57 @@
-import React, { useEffect, useState } from "react"
-import { Formik, Form, FormikHelpers, useFormikContext } from "formik"
-import * as yup from "yup"
-import { Column } from "react-table"
+import React, { useEffect, useState } from "react";
+import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
+import * as yup from "yup";
+import { Column } from "react-table";
 
-import { useUser } from "api/user"
-import { Routes } from "constants/routes"
-import { useOrganization, useOrganizationVouchers } from "api/organization"
+import { useUser } from "api/user";
+import { Routes } from "constants/routes";
+import { useOrganization, useOrganizationVouchers } from "api/organization";
 import {
   createVoucher,
   editVoucher,
   uploadCodeList,
   uploadEmailList,
-} from "api/voucher"
-import usePagination from "hooks/usePagination"
-import { VOUCHER_TYPE_OPTIONS } from "constants/options"
-import useRedirect from "hooks/useRedirect"
+  uploadManualCodes,
+} from "api/voucher";
+import usePagination from "hooks/usePagination";
+import { VOUCHER_TYPE_OPTIONS } from "constants/options";
+import useRedirect from "hooks/useRedirect";
 
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
-import { Table } from "@commitUI"
-import { Modal, ModalProps, Button, Heading, Search } from "commit-design"
+import { Table } from "@commitUI";
+import { Modal, ModalProps, Button, Heading, Search } from "commit-design";
 import {
   FileUpload,
   Input,
   Select,
   TextArea,
   GroupInput,
-  DateInput
-} from "components/Form"
-import useSearch from "hooks/useSearch"
+  DateInput,
+} from "components/Form";
+import useSearch from "hooks/useSearch";
 import {
   checkDateFormat,
   displayDate,
   formatDate,
   toDateObject,
-} from "utils/date"
-import { isSameFileUrl } from "utils/file"
-import { focusElementWithHotkey } from "utils/focusElement"
+} from "utils/date";
+import { isSameFileUrl } from "utils/file";
+import { focusElementWithHotkey } from "utils/focusElement";
 
-import styles from "./AdminHome.module.scss"
+import styles from "./AdminHome.module.scss";
 
-interface CodeEmailInput {
-  key: string
-  value: string
-}
 interface Values {
-  search?: string
-  availableDate: string
-  expiryDate: string
-  name: string
-  organization: string
-  description: string
-  type: Option
-  image: string
-  codeList: string
-  emailList: string
-  manualCodeInputs: CodeEmailInput[]
+  search?: string;
+  availableDate: string;
+  expiryDate: string;
+  name: string;
+  organization: string;
+  description: string;
+  type: Option;
+  image: string;
+  codeList: string;
+  emailList: string;
+  manualCodeInputs: CodeEmailInput[];
 }
 
 const initialValues: Values = {
@@ -72,7 +69,7 @@ const initialValues: Values = {
   codeList: "",
   emailList: "",
   manualCodeInputs: [{ key: "", value: "" }],
-}
+};
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
   search: yup.string().default(""),
@@ -102,7 +99,7 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
   manualCodeInputs: yup.array(),
-})
+});
 
 enum types {
   ADD = "ADD",
@@ -110,12 +107,12 @@ enum types {
 }
 
 const Home = () => {
-  const { data: user } = useUser()
-  const { data: organization } = useOrganization(user?.username)
-  const [selected, setSelected] = useState<AdminVoucher>()
-  const [open, setOpen] = useState<types | null>(null)
-  const closeModal = () => setOpen(null)
-  const { page, setPage, setPerPage, perPage } = usePagination()
+  const { data: user } = useUser();
+  const { data: organization } = useOrganization(user?.username);
+  const [selected, setSelected] = useState<AdminVoucher>();
+  const [open, setOpen] = useState<types | null>(null);
+  const closeModal = () => setOpen(null);
+  const { page, setPage, setPerPage, perPage } = usePagination();
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
     revalidate,
@@ -123,21 +120,21 @@ const Home = () => {
     Organization: organization?.name,
     page: page.toString(),
     page_size: perPage.toString(),
-  })
+  });
   const { searchProps, filteredData: data } = useSearch(
     vouchers.results as AdminVoucher[],
     "name"
-  )
+  );
 
   useRedirect(
     Routes.adminChangePassword,
     Boolean(organization) && organization!.is_first_time_login
-  )
+  );
 
   useEffect(() => {
-    const closeEventListener = focusElementWithHotkey("#search", "/")
-    return closeEventListener
-  })
+    const closeEventListener = focusElementWithHotkey("#search", "/");
+    return closeEventListener;
+  });
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
@@ -171,12 +168,12 @@ const Home = () => {
       },
     ],
     []
-  )
+  );
 
   const handleSelect = (uuid: string) => {
-    setSelected(vouchers.results.find((voucher) => voucher.uuid === uuid))
-    setOpen(types.EDIT)
-  }
+    setSelected(vouchers.results.find((voucher) => voucher.uuid === uuid));
+    setOpen(types.EDIT);
+  };
 
   const handleSubmit = async (
     values: Values,
@@ -191,35 +188,38 @@ const Home = () => {
       description: values.description,
       counter: 0, // To-do
       organization: values.organization,
-    }
+    };
 
-    const files: { [key: string]: any } = {}
+    const files: { [key: string]: any } = {};
     if (!isSameFileUrl(selected?.image, values.image)) {
-      files.image = values.image
+      files.image = values.image;
     }
 
     if (open === types.ADD) {
-      createVoucher(data, files)
+      createVoucher(data, files);
     } else if (open === types.EDIT) {
-      await editVoucher(selected!.uuid, data, files)
-      await revalidate()
+      await editVoucher(selected!.uuid, data, files);
+      await revalidate();
 
       if (values.codeList) {
         // Need to wait for code to be created first, before we can assign the code to an instance of IdCodeEmail
         await uploadCodeList(selected!.uuid, {
           code_list: values.codeList,
-        })
+        });
       }
       if (values.emailList) {
         uploadEmailList(selected!.uuid, {
           email_list: values.emailList,
-        })
+        });
+      }
+      if (values.manualCodeInputs.length) {
+        uploadManualCodes(selected!.uuid, values.manualCodeInputs);
       }
     }
 
-    closeModal()
-    formikHelpers.resetForm()
-  }
+    closeModal();
+    formikHelpers.resetForm();
+  };
 
   return (
     <>
@@ -273,28 +273,28 @@ const Home = () => {
         </Form>
       </Formik>
     </>
-  )
-}
+  );
+};
 
 type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
-  voucher?: AdminVoucher
-  type?: types | null
-}
+  voucher?: AdminVoucher;
+  type?: types | null;
+};
 
 const AdminVoucherModal = ({
   voucher,
   type,
   onClose,
 }: AdminVoucherModalProps) => {
-  const [isUploadDisabled, setIsUploadDisabled] = useState(false)
+  const [isUploadDisabled, setIsUploadDisabled] = useState(false);
   const {
     setValues,
     submitForm,
     resetForm,
     setFieldValue,
-  } = useFormikContext<Values>()
-  const isOpen = Boolean(type)
-  const isAdd = type === types.ADD
+  } = useFormikContext<Values>();
+  const isOpen = Boolean(type);
+  const isAdd = type === types.ADD;
   useEffect(() => {
     if (!isAdd) {
       setValues({
@@ -311,25 +311,25 @@ const AdminVoucherModal = ({
         codeList: "",
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
-      })
-      setIsUploadDisabled(voucher?.voucher_type === "No code")
+      });
+      setIsUploadDisabled(voucher?.voucher_type === "No code");
     }
-  }, [setValues, voucher, type])
+  }, [setValues, voucher, type]);
 
   useEffect(() => {
     setFieldValue("type", {
       label: voucher?.voucher_type || "",
       value: voucher?.voucher_type || "",
-    })
-  }, [voucher])
+    });
+  }, [voucher]);
 
   useEffect(() => {
-    if (!type) resetForm()
-  }, [type])
+    if (!type) resetForm();
+  }, [type]);
 
   const handleChange = (option: any) => {
     setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
-  }
+  };
 
   return (
     <Modal
@@ -390,32 +390,32 @@ const AdminVoucherModal = ({
             disabled={isUploadDisabled}
           />
 
-        {voucher?.voucher_type !== "Dinamically allocated" &&
-          <FileUpload
-            label="Upload Voucher Email List"
-            type="csv"
-            name="emailList"
-            className={styles.upload}
-            disabled={isUploadDisabled}
-          />
-        }
+          {voucher?.voucher_type !== "Dinamically allocated" && (
+            <FileUpload
+              label="Upload Voucher Email List"
+              type="csv"
+              name="emailList"
+              className={styles.upload}
+              disabled={isUploadDisabled}
+            />
+          )}
         </>
       )}
-    {voucher?.voucher_type !== "Dinamically allocated" &&
-      <GroupInput
-        name="manualCodeInputs"
-        label="Add individual code-email pairs"
-        keyLabel="Code"
-        valueLabel="Email"
-        disabled={isUploadDisabled}
-      />
-    }
+      {voucher?.voucher_type !== "Dinamically allocated" && (
+        <GroupInput
+          name="manualCodeInputs"
+          label="Add individual code-email pairs"
+          keyLabel="Code"
+          valueLabel="Email"
+          disabled={isUploadDisabled}
+        />
+      )}
 
       <Button className={styles.submit} onClick={submitForm}>
         Submit
       </Button>
     </Modal>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
