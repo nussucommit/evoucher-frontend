@@ -1,47 +1,44 @@
-import React from "react"
-import { Formik, Form, FormikHelpers } from "formik"
-import * as yup from "yup"
-import { AxiosError } from "axios"
+import React from "react";
+import { Formik, Form, FormikHelpers } from "formik";
+import * as yup from "yup";
+import { AxiosError } from "axios";
 
-import { Routes } from "constants/routes"
-import { register } from "api/auth"
-import history from "utils/history"
-import { FACULTY_OPTIONS, YEAR_OPTIONS } from "constants/options"
-import useRequestState from "hooks/useRequestState"
+import { Routes } from "constants/routes";
+import { register } from "api/auth";
+import history from "utils/history";
+import { FACULTY_OPTIONS, YEAR_OPTIONS } from "constants/options";
+import useRequestState from "hooks/useRequestState";
 
-import { Button, Heading } from "@commitUI/index"
-import { Input, Select } from "components/Form"
-import LinkButton from "components/LinkButton"
+import { Button, Heading } from "@commitUI/index";
+import { Input, Select } from "components/Form";
+import LinkButton from "components/LinkButton";
 
-import styles from "./Register.module.css"
-import logo from "../../assets/images/logo.png"
-import logo2 from "assets/images/logo2.jpeg"
+import styles from "./Register.module.css";
+import logo from "../../assets/images/logo.png";
+import logo2 from "assets/images/logo2.jpeg";
 
 type Option = {
-  value: string | number
-  label: string
-}
+  value: string | number;
+  label: string;
+};
 
 interface Values {
-  name: string
-  nusnetID: string
-  year: Option
-  faculties: Option[]
-  password: string
+  name: string;
+  nusnetID: string;
+  year?: Option;
+  faculties: Option[];
+  password: string;
 }
 
 const Register = () => {
-  const state = useRequestState()
+  const state = useRequestState();
   const initialValues: Values = {
     name: "",
     nusnetID: "",
-    year: {
-      label: "",
-      value: "",
-    },
+    year: undefined,
     faculties: [],
     password: "",
-  }
+  };
 
   const validationSchema: yup.SchemaOf<Values> = yup
     .object({
@@ -68,33 +65,33 @@ const Register = () => {
         }),
       password: yup.string().required("Required"),
     })
-    .defined()
+    .defined();
 
   const handleRegister = (
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
-    state.start()
+    state.start();
     try {
       register({
         username: values.nusnetID,
         password: values.password,
         name: values.name,
-        year: values.year.value as number,
+        year: values.year?.value as number,
         faculty1: values.faculties[0].value as string,
         faculty2:
           values.faculties.length === 2
             ? (values.faculties[1].value as string)
             : "",
-      })
-      formikHelpers.setSubmitting(false)
-      history.push("/login")
+      });
+      formikHelpers.setSubmitting(false);
+      history.push("/login");
     } catch (e) {
-      state.setError((e as AxiosError).message)
-      console.log(e)
+      state.setError((e as AxiosError).message);
+      console.log(e);
     }
-    state.end()
-  }
+    state.end();
+  };
 
   return (
     <>
@@ -134,6 +131,7 @@ const Register = () => {
             </div>
 
             <Select
+              autoComplete="none"
               name="faculties"
               label="Faculty"
               options={FACULTY_OPTIONS}
@@ -166,7 +164,7 @@ const Register = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

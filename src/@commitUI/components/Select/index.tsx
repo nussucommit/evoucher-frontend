@@ -1,4 +1,4 @@
-import React, { ElementRef } from "react";
+import React from "react";
 import ReactSelect, { components, Props } from "react-select";
 import cx from "classnames";
 
@@ -40,6 +40,9 @@ export const Select = ({
             {children}
           </Control>
         ),
+        // Input: (props) => (
+        //   <components.Input {...props} autoComplete="new-password" />
+        // ),
       }}
       placeholder=""
       autoBlur
