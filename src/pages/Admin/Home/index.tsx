@@ -327,7 +327,7 @@ const AdminVoucherModal = ({
     if (!type) resetForm();
   }, [type]);
 
-  const handleChange = (option: any) => {
+  const handleChange = (option: Option) => {
     setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
   };
 

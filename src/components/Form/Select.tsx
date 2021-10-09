@@ -1,21 +1,26 @@
-import React from "react"
-import { useField } from "formik"
+import React from "react";
+import { useField } from "formik";
 
-import { Select as BaseSelect, SelectProps } from "@commitUI/index"
+import { Select as BaseSelect, SelectProps } from "@commitUI/index";
 
-type Props = Omit<SelectProps, "onBlur" | "onChange"> & {
-  name: string
-}
+type Props = Omit<SelectProps, "onBlur"> & {
+  name: string;
+};
 
-export const Select = ({ name, label, onChange: onChangeProps, ...props }: Props) => {
-  const [field, meta, helper] = useField(name)
-  const { onBlur } = field
-  const { setValue } = helper
-  const { error, touched } = meta
+export const Select = ({
+  name,
+  label,
+  onChange: onChangeProps,
+  ...props
+}: Props) => {
+  const [field, meta, helper] = useField(name);
+  const { onBlur } = field;
+  const { setValue } = helper;
+  const { error, touched } = meta;
   const onChange = (option: Option) => {
-    onChangeProps(option);
+    onChangeProps && onChangeProps(option);
     setValue(option);
-  }
+  };
 
   return (
     <BaseSelect
@@ -27,5 +32,5 @@ export const Select = ({ name, label, onChange: onChangeProps, ...props }: Props
       onChange={onChange}
       onBlur={onBlur}
     />
-  )
-}
+  );
+};

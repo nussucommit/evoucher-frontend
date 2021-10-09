@@ -10,7 +10,7 @@ export const FACULTY_OPTIONS = [
   { label: "Nursing", value: "Nursing" },
   { label: "Pharmacy", value: "Pharmacy" },
   { label: "Music", value: "Music" },
-]
+];
 
 export const YEAR_OPTIONS = [
   { label: 1, value: 1 },
@@ -18,10 +18,10 @@ export const YEAR_OPTIONS = [
   { label: 3, value: 3 },
   { label: 4, value: 4 },
   { label: 5, value: 5 },
-]
+];
 
-export const VOUCHER_TYPE_OPTIONS = [
+export const VOUCHER_TYPE_OPTIONS: Option[] = [
   { label: "Default", value: "Default" },
   { label: "No code", value: "No code" },
   { label: "Dinamically allocated", value: "Dinamically allocated" },
-]
+];

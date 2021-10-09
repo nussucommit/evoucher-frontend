@@ -1,16 +1,16 @@
-import React, { ElementRef } from "react"
-import ReactSelect, { components, Props } from "react-select"
-import cx from "classnames"
+import React from "react";
+import ReactSelect, { components, Props } from "react-select";
+import cx from "classnames";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import styles from "./Select.module.css"
+import styles from "./Select.module.css";
 
 export interface SelectProps extends Omit<Props, "components" | "placeholder"> {
-  label?: string
-  id?: string
-  error?: string
-  limitPick?: number
+  label?: string;
+  id?: string;
+  error?: string;
+  limitPick?: number;
 }
 
 export const Select = ({
@@ -25,7 +25,7 @@ export const Select = ({
   limitPick = 9999,
   ...props
 }: SelectProps) => {
-  const currLength = value?.length || 0
+  const currLength = value?.length || 0;
 
   return (
     <ReactSelect
@@ -40,6 +40,9 @@ export const Select = ({
             {children}
           </Control>
         ),
+        // Input: (props) => (
+        //   <components.Input {...props} autoComplete="new-password" />
+        // ),
       }}
       placeholder=""
       autoBlur
@@ -82,15 +85,15 @@ export const Select = ({
         }),
       }}
     />
-  )
-}
+  );
+};
 
 const Control = (props: any): JSX.Element => {
   const error = props.error
     ? JSON.stringify(props.error).charAt(0) === '"'
       ? props.error
       : JSON.stringify(props.error).slice(10, -2)
-    : ""
+    : "";
 
   return (
     <div>
@@ -104,17 +107,17 @@ const Control = (props: any): JSX.Element => {
         </Text>
       )}
     </div>
-  )
-}
+  );
+};
 
 const Label = ({
   isFloating,
   isFilled,
   children,
 }: {
-  isFloating: boolean
-  isFilled: boolean
-  children: React.ReactNode
+  isFloating: boolean;
+  isFilled: boolean;
+  children: React.ReactNode;
 }) => {
   return (
     <label
@@ -125,5 +128,5 @@ const Label = ({
     >
       {children}
     </label>
-  )
-}
+  );
+};
