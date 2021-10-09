@@ -1,16 +1,16 @@
-import React from "react"
-import { useField } from "formik"
-import { FileUpload as BaseFileUpload, FileUploadProps } from "@commitUI"
+import React from "react";
+import { useField } from "formik";
+import { FileUpload as BaseFileUpload, FileUploadProps } from "@commitUI";
 
 type Props = Omit<FileUploadProps, "setFile"> & {
-  name: string
-}
+  name: string;
+};
 
 export const FileUpload = ({ name, ...props }: Props) => {
-  const [field, meta, helper] = useField(name)
-  const { touched, error } = meta
-  const { setValue } = helper
-  const setFile = (base64?: string) => setValue(base64)
+  const [field, meta, helper] = useField(name);
+  const { touched, error } = meta;
+  const { setValue } = helper;
+  const setFile = (base64?: string) => setValue(base64);
 
   return (
     <BaseFileUpload
@@ -19,5 +19,5 @@ export const FileUpload = ({ name, ...props }: Props) => {
       setFile={setFile}
       error={touched && error ? error : ""}
     />
-  )
-}
+  );
+};

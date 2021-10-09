@@ -1,16 +1,16 @@
-import React from "react"
-import { Route, Switch, Redirect, RouteProps } from "react-router-dom"
+import React from "react";
+import { Route, Switch, Redirect, RouteProps } from "react-router-dom";
 
-import useAuth from "hooks/useAuth"
-import { Routes } from "constants/routes"
+import useAuth from "hooks/useAuth";
+import { Routes } from "constants/routes";
 
 interface PrivateRouteProps extends Omit<RouteProps, "component"> {
-  component: React.ElementType
+  component: React.ElementType;
 }
 
 const PrivateRoute = (props: PrivateRouteProps): JSX.Element => {
-  const { component: Component, ...routeProps } = props
-  const { isAuth } = useAuth()
+  const { component: Component, ...routeProps } = props;
+  const { isAuth } = useAuth();
   return (
     <Route
       {...routeProps}
@@ -27,7 +27,7 @@ const PrivateRoute = (props: PrivateRouteProps): JSX.Element => {
         )
       }
     />
-  )
-}
+  );
+};
 
-export default PrivateRoute
+export default PrivateRoute;

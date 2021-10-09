@@ -1,19 +1,19 @@
-import React from "react"
-import { Skeleton, SkeletonText } from "@chakra-ui/react"
+import React from "react";
+import { Skeleton, SkeletonText } from "@chakra-ui/react";
 
-import { useVoucher } from "api/voucher"
-import { dateToString } from "utils/date"
+import { useVoucher } from "api/voucher";
+import { dateToString } from "utils/date";
 
-import { Card, CardProps, Text, Heading } from "@commitUI/index"
+import { Card, CardProps, Text, Heading } from "@commitUI/index";
 
-import styles from "./VoucherCard.module.css"
+import styles from "./VoucherCard.module.css";
 
 export interface Props extends CardProps {
-  voucherID: number
-  style?: React.CSSProperties
-  onClick?: React.MouseEventHandler<HTMLDivElement>
-  isRedeemable: boolean
-  hasRedeemed: boolean
+  voucherID: number;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  isRedeemable: boolean;
+  hasRedeemed: boolean;
 }
 
 const VoucherCard = ({
@@ -22,10 +22,10 @@ const VoucherCard = ({
   children,
   onClick,
   isRedeemable,
-  hasRedeemed
+  hasRedeemed,
 }: Props): JSX.Element => {
-  const { data: voucher } = useVoucher(voucherID)
-  const isLoading = !voucher
+  const { data: voucher } = useVoucher(voucherID);
+  const isLoading = !voucher;
 
   return isLoading ? (
     <VoucherCardSkeleton />
@@ -50,17 +50,18 @@ const VoucherCard = ({
             )}`}</Text>
           </div>
 
-          {(!isRedeemable || hasRedeemed) &&
-            <Text>Flash this eVoucher to redeem</Text>}
+          {(!isRedeemable || hasRedeemed) && (
+            <Text>Flash this eVoucher to redeem</Text>
+          )}
 
-          {isRedeemable && !hasRedeemed &&
-            <Text>Click this eVoucher to redeem</Text>}
-
+          {isRedeemable && !hasRedeemed && (
+            <Text>Click this eVoucher to redeem</Text>
+          )}
         </div>
       </>
     </Card>
-  )
-}
+  );
+};
 
 export const VoucherCardSkeleton = () => {
   return (
@@ -104,7 +105,7 @@ export const VoucherCardSkeleton = () => {
         />
       </div>
     </Card>
-  )
-}
+  );
+};
 
-export default VoucherCard
+export default VoucherCard;

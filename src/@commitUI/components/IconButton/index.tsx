@@ -1,13 +1,13 @@
-import React from "react"
+import React from "react";
 import {
   Tooltip,
   IconButton as ChakraIconButton,
   IconButtonProps,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
 type Props = Omit<IconButtonProps, "aria-label"> & {
-  label?: string
-}
+  label?: string;
+};
 
 export const IconButton = ({
   onClick,
@@ -28,5 +28,5 @@ export const IconButton = ({
         aria-label={label}
       />
     </Tooltip>
-  )
-}
+  );
+};

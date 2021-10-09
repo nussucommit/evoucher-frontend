@@ -1,15 +1,15 @@
-import { InputHTMLAttributes } from "react"
-import cx from "classnames"
-import { Search2Icon, SearchIcon } from "@chakra-ui/icons"
+import { InputHTMLAttributes } from "react";
+import cx from "classnames";
+import { Search2Icon, SearchIcon } from "@chakra-ui/icons";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import styles from "./Search.module.css"
-import { Color } from "@commitUI/constants/theme"
+import styles from "./Search.module.css";
+import { Color } from "@commitUI/constants/theme";
 
 interface ExtendedInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  error?: string
+  label?: string;
+  error?: string;
 }
 
 export const Search = ({
@@ -23,7 +23,7 @@ export const Search = ({
   type = "text",
   ...rest
 }: ExtendedInputProps) => {
-  const cn = cx(styles.container, className)
+  const cn = cx(styles.container, className);
 
   return (
     <div className={cn}>
@@ -42,5 +42,5 @@ export const Search = ({
         className={Boolean(error) ? styles.inputError : undefined}
       />
     </div>
-  )
-}
+  );
+};

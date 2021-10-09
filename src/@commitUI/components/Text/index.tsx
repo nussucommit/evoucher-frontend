@@ -1,18 +1,18 @@
-import React from "react"
-import cx from "classnames"
+import React from "react";
+import cx from "classnames";
 
-import styles from "./Text.module.css"
+import styles from "./Text.module.css";
 
 export type Props = {
-  block?: boolean
-  centered?: boolean
-  children?: React.ReactNode
-  className?: string
-  ellipsize?: boolean
-  noLeading?: boolean
-  size?: "xs" | "sm" | "md" | "lg" | "xl"
-  bold?: boolean
-  semibold?: boolean
+  block?: boolean;
+  centered?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  ellipsize?: boolean;
+  noLeading?: boolean;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  bold?: boolean;
+  semibold?: boolean;
   type?:
     | "black"
     | "danger"
@@ -23,10 +23,10 @@ export type Props = {
     | "primary"
     | "success"
     | "warning"
-    | "white"
-  uppercase?: boolean
-  span?: boolean
-}
+    | "white";
+  uppercase?: boolean;
+  span?: boolean;
+};
 
 export const Text = (props: Props) => {
   const {
@@ -41,7 +41,7 @@ export const Text = (props: Props) => {
     type,
     uppercase,
     span,
-  } = props
+  } = props;
   const cn = cx(
     styles.text,
     {
@@ -68,7 +68,7 @@ export const Text = (props: Props) => {
       [styles.warning]: type === "warning",
     },
     className
-  )
-  if (span) return <span className={cn}>{children}</span>
-  return <p className={cn}>{children}</p>
-}
+  );
+  if (span) return <span className={cn}>{children}</span>;
+  return <p className={cn}>{children}</p>;
+};

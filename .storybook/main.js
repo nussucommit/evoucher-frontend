@@ -1,4 +1,4 @@
-const path = require("path")
+const path = require("path");
 
 module.exports = {
   stories: ["../src/@commitUI/components/**/*.stories.@(js|jsx|ts|tsx)"],
@@ -26,6 +26,6 @@ module.exports = {
           "emotion-theming": "@emotion/react",
         },
       },
-    }
+    };
   },
-}
+};

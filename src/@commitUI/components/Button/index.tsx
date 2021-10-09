@@ -1,26 +1,26 @@
-import React, { ButtonHTMLAttributes } from "react"
-import { Spinner } from "@chakra-ui/react"
-import cx from "classnames"
+import React, { ButtonHTMLAttributes } from "react";
+import { Spinner } from "@chakra-ui/react";
+import cx from "classnames";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import styles from "./Button.module.css"
+import styles from "./Button.module.css";
 
 export interface Props
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "htmlType"> {
-  id?: string
-  block?: boolean
-  children?: React.ReactNode
-  className?: string
-  disabled?: boolean
-  htmlType?: "reset" | "submit"
-  onClick?: () => void
-  size?: "small" | "large"
-  icon?: React.ReactNode
-  type?: "danger" | "success" | "outlined" | "text" | "primary" | "secondary"
-  vCenter?: boolean
-  isSubmit?: boolean
-  isLoading?: boolean
+  id?: string;
+  block?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+  htmlType?: "reset" | "submit";
+  onClick?: () => void;
+  size?: "small" | "large";
+  icon?: React.ReactNode;
+  type?: "danger" | "success" | "outlined" | "text" | "primary" | "secondary";
+  vCenter?: boolean;
+  isSubmit?: boolean;
+  isLoading?: boolean;
 }
 
 export const Button = ({
@@ -46,7 +46,7 @@ export const Button = ({
       [styles.disabled]: disabled,
     },
     className
-  )
+  );
   return (
     <button
       {...buttonProps}
@@ -56,5 +56,5 @@ export const Button = ({
     >
       {isLoading ? <Spinner size="xs" /> : children}
     </button>
-  )
-}
+  );
+};

@@ -1,14 +1,14 @@
-import React, { InputHTMLAttributes } from "react"
-import cx from "classnames"
+import React, { InputHTMLAttributes } from "react";
+import cx from "classnames";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import styles from "./TextArea.module.css"
+import styles from "./TextArea.module.css";
 
 export interface ExtendedTextAreaProps
   extends Omit<InputHTMLAttributes<HTMLTextAreaElement>, "placeholder"> {
-  label?: string
-  error?: string
+  label?: string;
+  error?: string;
 }
 
 export const TextArea = ({
@@ -27,12 +27,12 @@ export const TextArea = ({
       [styles.containerError]: Boolean(error),
     },
     className
-  )
+  );
 
   const cnLabel = cx({
     [styles.filled]: value !== "",
     [styles.labelError]: Boolean(error),
-  })
+  });
 
   return (
     <div className={cn}>
@@ -54,5 +54,5 @@ export const TextArea = ({
         )}
       </>
     </div>
-  )
-}
+  );
+};

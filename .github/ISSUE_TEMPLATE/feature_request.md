@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: Additional features for the project.
-title: ''
+title: ""
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
 ## Description

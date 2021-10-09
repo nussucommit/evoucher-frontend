@@ -1,20 +1,20 @@
-import React, { lazy, Suspense } from "react"
-import { Router, Switch, Route } from "react-router-dom"
+import React, { lazy, Suspense } from "react";
+import { Router, Switch, Route } from "react-router-dom";
 
-import { Routes } from "constants/routes"
-import history from "utils/history"
+import { Routes } from "constants/routes";
+import history from "utils/history";
 
-import { PublicRoute, PrivateRoute, AdminRoute } from "containers/Routes"
+import { PublicRoute, PrivateRoute, AdminRoute } from "containers/Routes";
 
 // Public Pages
 // const Login = lazy(() => import("./Login"));
-import Login from "./Login"
-import Register from "./Register"
-import Home from "./Home"
-import ChangePassword from "./ChangePassword"
-import AdminLogin from "./Admin/Login"
-import AdminHome from "./Admin/Home"
-import Navbar from "components/Navbar"
+import Login from "./Login";
+import Register from "./Register";
+import Home from "./Home";
+import ChangePassword from "./ChangePassword";
+import AdminLogin from "./Admin/Login";
+import AdminHome from "./Admin/Home";
+import Navbar from "components/Navbar";
 
 // Protected Pages
 
@@ -45,7 +45,7 @@ const Pages = () => {
         <AdminRoute path={Routes.adminHome} component={AdminHome} />
       </Switch>
     </Router>
-  )
-}
+  );
+};
 
-export default Pages
+export default Pages;

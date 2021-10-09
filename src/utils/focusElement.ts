@@ -10,12 +10,13 @@ export const focusElementWithHotkey = (
 ): (() => void) => {
   const hotkeyEventHandler = (e: KeyboardEvent): void => {
     if (e.key !== hotkey || document.activeElement?.matches(targetId)) {
-      return
+      return;
     }
-    const targetElement = document.querySelector(targetId) as HTMLElement
-    targetElement?.focus()
-    e.preventDefault()
-  }
-  document.addEventListener("keydown", hotkeyEventHandler)
-  return (): void => document.removeEventListener("keydown", hotkeyEventHandler)
-}
+    const targetElement = document.querySelector(targetId) as HTMLElement;
+    targetElement?.focus();
+    e.preventDefault();
+  };
+  document.addEventListener("keydown", hotkeyEventHandler);
+  return (): void =>
+    document.removeEventListener("keydown", hotkeyEventHandler);
+};

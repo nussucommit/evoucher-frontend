@@ -1,16 +1,16 @@
-import React from "react"
-import { Nav, NavLink, Heading, Button } from "@commitUI/index"
+import React from "react";
+import { Nav, NavLink, Heading, Button } from "@commitUI/index";
 
-import { logout } from "api/auth"
-import { getToken } from "utils/auth"
-import useAuth from "hooks/useAuth"
+import { logout } from "api/auth";
+import { getToken } from "utils/auth";
+import useAuth from "hooks/useAuth";
 
-import styles from "./Navbar.module.css"
+import styles from "./Navbar.module.css";
 
 const Navbar = () => {
-  const { logout: localLogout, isAuth } = useAuth()
+  const { logout: localLogout, isAuth } = useAuth();
 
-  if (!isAuth) return null
+  if (!isAuth) return null;
 
   return (
     <>
@@ -22,9 +22,9 @@ const Navbar = () => {
         {isAuth && (
           <Button
             onClick={() => {
-              const token = getToken()
-              logout({ refresh_token: token!.refresh })
-              localLogout()
+              const token = getToken();
+              logout({ refresh_token: token!.refresh });
+              localLogout();
             }}
             type="outlined"
             className={styles.button}
@@ -34,7 +34,7 @@ const Navbar = () => {
         )}
       </Nav>
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

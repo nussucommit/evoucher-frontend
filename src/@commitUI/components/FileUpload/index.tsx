@@ -1,29 +1,29 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { useDropzone, FileWithPath } from "react-dropzone"
-import cx from "classnames"
+import React, { useCallback, useEffect, useState } from "react";
+import { useDropzone, FileWithPath } from "react-dropzone";
+import cx from "classnames";
 
-import { Text } from "../Text"
-import { Button } from "../Button"
+import { Text } from "../Text";
+import { Button } from "../Button";
 
-import styles from "./FileUpload.module.css"
+import styles from "./FileUpload.module.css";
 
 export type Props = {
-  label?: string
-  text?: string
-  file?: string
-  setFile: (base64?: string) => void
-  className?: string
-  type?: "image" | "csv" | "pdf"
-  error?: string
-  disabled?: boolean
-}
+  label?: string;
+  text?: string;
+  file?: string;
+  setFile: (base64?: string) => void;
+  className?: string;
+  type?: "image" | "csv" | "pdf";
+  error?: string;
+  disabled?: boolean;
+};
 
 const ACCEPTED = {
   image: "image/jpeg, image/png",
   csv:
     ".csv, text/csv, application/vnd.ms-excel, application/csv, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values",
   pdf: ".pdf",
-}
+};
 
 export const FileUpload = ({
   label,
@@ -35,40 +35,40 @@ export const FileUpload = ({
   className,
   disabled,
 }: Props) => {
-  const [preview, setPreview] = useState<string | ArrayBuffer | null>()
+  const [preview, setPreview] = useState<string | ArrayBuffer | null>();
   const onDropFile = useCallback((acceptedFiles: FileWithPath[]) => {
     acceptedFiles.forEach((file: FileWithPath) => {
-      const reader = new FileReader()
-      reader.onabort = () => console.log("file reading was aborted")
-      reader.onerror = () => console.log("file reading has failed")
+      const reader = new FileReader();
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
       reader.onload = () => {
-        const result = reader.result as string
-        console.log(result)
-        setFile(result)
-      }
-      reader.readAsDataURL(file)
-    })
-  }, [])
+        const result = reader.result as string;
+        console.log(result);
+        setFile(result);
+      };
+      reader.readAsDataURL(file);
+    });
+  }, []);
   const onDropImage = useCallback((acceptedFiles: FileWithPath[]) => {
     acceptedFiles.forEach((file: FileWithPath) => {
-      const reader = new FileReader()
-      reader.onabort = () => console.log("file reading was aborted")
-      reader.onerror = () => console.log("file reading has failed")
+      const reader = new FileReader();
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
       reader.onload = () => {
-        const result = reader.result as string
-        setPreview(result)
-        setFile(result)
-      }
-      reader.readAsDataURL(file)
-    })
-  }, [])
+        const result = reader.result as string;
+        setPreview(result);
+        setFile(result);
+      };
+      reader.readAsDataURL(file);
+    });
+  }, []);
 
   useEffect(() => {
     // If already has image
     if (text?.includes("https")) {
-      setPreview(text)
+      setPreview(text);
     }
-  }, [text])
+  }, [text]);
 
   const {
     acceptedFiles,
@@ -81,7 +81,7 @@ export const FileUpload = ({
     onDrop: type === "image" ? onDropImage : onDropFile,
     maxFiles: 1,
     accept: type ? ACCEPTED[type] : undefined,
-  })
+  });
 
   const cn = cx(
     styles.dropzone,
@@ -91,21 +91,18 @@ export const FileUpload = ({
       [styles.reject]: isDragReject,
     },
     className
-  )
+  );
 
-  const mainContainer = cx(
-    styles.container,
-    {
-      [styles.disabled]: disabled
-    }
-  )
+  const mainContainer = cx(styles.container, {
+    [styles.disabled]: disabled,
+  });
 
   const removeFile = () => {
-    acceptedFiles.splice(0, 1) // remove the file from the array
-    setFile("")
-  }
+    acceptedFiles.splice(0, 1); // remove the file from the array
+    setFile("");
+  };
 
-  const hasFile = acceptedFiles.length || file
+  const hasFile = acceptedFiles.length || file;
 
   return (
     <div className={mainContainer}>
@@ -130,5 +127,5 @@ export const FileUpload = ({
         ) : null}
       </div>
     </div>
-  )
-}
+  );
+};

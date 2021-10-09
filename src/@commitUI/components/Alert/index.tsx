@@ -1,23 +1,23 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState } from "react";
 import {
   Alert as ChakraAlert,
   AlertIcon,
   AlertProps as ChakraAlertProps,
   CloseButton,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import cx from "classnames"
+import cx from "classnames";
 
-import styles from "./Alert.module.css"
+import styles from "./Alert.module.css";
 
 export type AlertProps = Omit<ChakraAlertProps, "variant"> & {
-  hasIcon?: boolean
-  canClose?: boolean
-  className?: string
-  message: string
-}
+  hasIcon?: boolean;
+  canClose?: boolean;
+  className?: string;
+  message: string;
+};
 
 export const Alert = ({
   status,
@@ -27,12 +27,12 @@ export const Alert = ({
   className,
   ...alertProps
 }: AlertProps) => {
-  const cn = cx(styles.card, className)
+  const cn = cx(styles.card, className);
   // Since the initial state of isOp
-  const [isOpen, setIsOpen] = useState(true)
-  const onToggle = useCallback(() => setIsOpen(!isOpen), [isOpen])
+  const [isOpen, setIsOpen] = useState(true);
+  const onToggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <ChakraAlert
@@ -52,5 +52,5 @@ export const Alert = ({
         />
       )}
     </ChakraAlert>
-  )
-}
+  );
+};

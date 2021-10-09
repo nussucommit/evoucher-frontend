@@ -1,19 +1,19 @@
-import React from "react"
-import cs from "classnames"
+import React from "react";
+import cs from "classnames";
 
-import { Color, ColorName } from "@commitUI/constants/theme"
+import { Color, ColorName } from "@commitUI/constants/theme";
 
-import styles from "./Heading.module.css"
+import styles from "./Heading.module.css";
 
 export type Props = {
-  centered?: boolean
-  children?: React.ReactNode
-  className?: string
-  level?: 1 | 2 | 3 | 4 | 5 | 6
-  noLeading?: boolean
-  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
-  color?: ColorName
-}
+  centered?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  noLeading?: boolean;
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+  color?: ColorName;
+};
 
 export const Heading = (props: Props) => {
   const {
@@ -24,7 +24,7 @@ export const Heading = (props: Props) => {
     noLeading,
     color,
     size,
-  } = props
+  } = props;
   const cn = cs(
     styles.heading,
     {
@@ -38,29 +38,29 @@ export const Heading = (props: Props) => {
       [styles["2xl"]]: size === "2xl" || level === 1,
     },
     className
-  )
+  );
   if (level === 1)
     return (
       <h1 className={cn} style={{ color: color && Color[color] }}>
         {children}
       </h1>
-    )
+    );
   else if (level === 2)
     return (
       <h2 className={cn} style={{ color: color && Color[color] }}>
         {children}
       </h2>
-    )
+    );
   else if (level === 3)
     return (
       <h3 className={cn} style={{ color: color && Color[color] }}>
         {children}
       </h3>
-    )
+    );
   else
     return (
       <h4 className={cn} style={{ color: color && Color[color] }}>
         {children}
       </h4>
-    )
-}
+    );
+};
