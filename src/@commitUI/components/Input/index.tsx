@@ -1,14 +1,14 @@
-import React, { InputHTMLAttributes } from "react"
-import cx from "classnames"
+import React, { InputHTMLAttributes } from "react";
+import cx from "classnames";
 
-import { Text } from "../Text"
+import { Text } from "../Text";
 
-import styles from "./Input.module.css"
+import styles from "./Input.module.css";
 
 export interface ExtendedInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "placeholder"> {
-  label?: string
-  error?: string
+  label?: string;
+  error?: string;
 }
 
 export const Input = ({
@@ -28,12 +28,12 @@ export const Input = ({
       [styles.containerError]: Boolean(error),
     },
     className
-  )
+  );
 
   const cnLabel = cx({
     [styles.filled]: value !== "",
     [styles.labelError]: Boolean(error),
-  })
+  });
 
   return (
     <div className={cn} {...rest}>
@@ -52,5 +52,5 @@ export const Input = ({
         </Text>
       )}
     </div>
-  )
-}
+  );
+};

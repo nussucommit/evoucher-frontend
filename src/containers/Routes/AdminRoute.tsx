@@ -1,16 +1,16 @@
-import React from "react"
-import { Route, Redirect, RouteProps } from "react-router-dom"
+import React from "react";
+import { Route, Redirect, RouteProps } from "react-router-dom";
 
-import useAuth from "hooks/useAuth"
-import { Routes } from "constants/routes"
+import useAuth from "hooks/useAuth";
+import { Routes } from "constants/routes";
 
 interface AdminRouteProps extends Omit<RouteProps, "component"> {
-  component: React.ElementType
+  component: React.ElementType;
 }
 
 const AdminRoute = (props: AdminRouteProps): JSX.Element => {
-  const { component: Component, ...routeProps } = props
-  const { isAuth } = useAuth()
+  const { component: Component, ...routeProps } = props;
+  const { isAuth } = useAuth();
 
   return (
     <Route
@@ -28,7 +28,7 @@ const AdminRoute = (props: AdminRouteProps): JSX.Element => {
         )
       }
     />
-  )
-}
+  );
+};
 
-export default AdminRoute
+export default AdminRoute;

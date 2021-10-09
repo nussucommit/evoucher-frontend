@@ -1,60 +1,60 @@
-import React from "react"
-import { Formik, Form, FormikHelpers } from "formik"
-import * as yup from "yup"
+import React from "react";
+import { Formik, Form, FormikHelpers } from "formik";
+import * as yup from "yup";
 
-import { Routes } from "constants/routes"
-import { login } from "api/auth"
-import history from "utils/history"
-import useAuth from "hooks/useAuth"
-import useRequestState from "hooks/useRequestState"
+import { Routes } from "constants/routes";
+import { login } from "api/auth";
+import history from "utils/history";
+import useAuth from "hooks/useAuth";
+import useRequestState from "hooks/useRequestState";
 
-import { Button, Heading, Alert } from "@commitUI/index"
-import { Input } from "components/Form"
-import LinkButton from "components/LinkButton"
+import { Button, Heading, Alert } from "@commitUI/index";
+import { Input } from "components/Form";
+import LinkButton from "components/LinkButton";
 
-import styles from "./Login.module.css"
-import logo from "assets/images/logo.png"
-import logo2 from "assets/images/logo2.jpeg"
+import styles from "./Login.module.css";
+import logo from "assets/images/logo.png";
+import logo2 from "assets/images/logo2.jpeg";
 
 interface Values {
-  nusnet: string
-  password: string
+  nusnet: string;
+  password: string;
 }
 
 const Login = () => {
-  const state = useRequestState()
+  const state = useRequestState();
   const initialValues: Values = {
     nusnet: "",
     password: "",
-  }
+  };
 
   const validationSchema: yup.SchemaOf<Values> = yup.object({
     nusnet: yup.string().required("Required"),
     password: yup.string().required("Required"),
-  })
+  });
 
-  const { userLogin: localLogin } = useAuth() // Local session login
+  const { userLogin: localLogin } = useAuth(); // Local session login
 
   const handleLogin = async (
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
     try {
-      state.start()
+      state.start();
       const { data: token } = await login({
         username: values.nusnet,
         password: values.password,
-      })
-      localLogin(token)
-      formikHelpers.setSubmitting(false)
-      history.push("/")
+      });
+      localLogin(token);
+      formikHelpers.setSubmitting(false);
+      history.push("/");
     } catch (e) {
       state.setError(
         "The username and password you entered did not match our records. Please try again."
-      )
+      );
     }
-    state.end()
-  }
+    state.end();
+  };
 
   return (
     <>
@@ -132,7 +132,7 @@ const Login = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

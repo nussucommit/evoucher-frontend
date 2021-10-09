@@ -1,5 +1,5 @@
-import request from "./request"
-import useRequest, { Config } from "./swr"
+import request from "./request";
+import useRequest, { Config } from "./swr";
 
 export const useOrganization = (
   username?: string,
@@ -11,13 +11,13 @@ export const useOrganization = (
       url: `organization/getorgbyuname/${username}`,
     },
     config
-  )
+  );
 
 export const useOrganizationVouchers = (
   params: {
-    Organization?: string
-    page?: string
-    page_size?: string
+    Organization?: string;
+    page?: string;
+    page_size?: string;
   },
   config?: Config<OrganizationVouchers>
 ) =>
@@ -27,11 +27,11 @@ export const useOrganizationVouchers = (
       url: `voucher/?${new URLSearchParams(params).toString()}`,
     },
     config
-  )
+  );
 
 export const updateOrganization = (
   name: string,
   data: Partial<Organization>
 ) => {
-  return request.patch(`organization/${name}`, data)
-}
+  return request.patch(`organization/${name}`, data);
+};

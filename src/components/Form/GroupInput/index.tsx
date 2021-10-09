@@ -1,18 +1,18 @@
-import { useState } from "react"
-import { useField, FieldArray } from "formik"
-import { InputProps, Button, Text } from "commit-design"
-import cx from "classnames"
+import { useState } from "react";
+import { useField, FieldArray } from "formik";
+import { InputProps, Button, Text } from "commit-design";
+import cx from "classnames";
 
-import { Input } from ".."
+import { Input } from "..";
 
-import styles from "./GroupInput.module.scss"
+import styles from "./GroupInput.module.scss";
 
 type Props = InputProps & {
-  name: string
-  keyLabel?: string
-  valueLabel?: string
-  disabled?: boolean
-}
+  name: string;
+  keyLabel?: string;
+  valueLabel?: string;
+  disabled?: boolean;
+};
 
 export const GroupInput = ({
   name,
@@ -24,17 +24,13 @@ export const GroupInput = ({
   disabled,
   ...props
 }: Props) => {
-  const [field] = useField(name)
-  const { value } = field
-  console.log(value)
+  const [field] = useField(name);
+  const { value } = field;
+  console.log(value);
 
-  const container = cx(
-    styles.container,
-    className,
-    {
-      [styles.disabled]: disabled
-    }
-  )
+  const container = cx(styles.container, className, {
+    [styles.disabled]: disabled,
+  });
 
   return (
     <FieldArray
@@ -81,5 +77,5 @@ export const GroupInput = ({
         </div>
       )}
     />
-  )
-}
+  );
+};

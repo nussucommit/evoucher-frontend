@@ -6,26 +6,26 @@ export enum SessionStorageKey {
 }
 
 const getItem = (key: SessionStorageKey) => {
-  return sessionStorage.getItem(SessionStorageKey[key])
-}
+  return sessionStorage.getItem(SessionStorageKey[key]);
+};
 
 const setItem = (key: SessionStorageKey, value: string) => {
-  return sessionStorage.setItem(SessionStorageKey[key], value)
-}
+  return sessionStorage.setItem(SessionStorageKey[key], value);
+};
 
 const removeItem = (key: SessionStorageKey) => {
-  return sessionStorage.removeItem(key)
-}
+  return sessionStorage.removeItem(key);
+};
 
 const removeAllItems = () => {
-  return sessionStorage.clear()
-}
+  return sessionStorage.clear();
+};
 
 const session = {
   getItem,
   setItem,
   removeItem,
   removeAllItems,
-}
+};
 
-export default session
+export default session;

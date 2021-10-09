@@ -1,6 +1,6 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState } from "react";
 
-import { InputProps } from "commit-design"
+import { InputProps } from "commit-design";
 
 /**
  * React hook to provide search functionality out of the box
@@ -14,17 +14,17 @@ const useSearch = <T extends { [x: string]: any }>(
   property?: Partial<keyof T>,
   initialValue: string = ""
 ) => {
-  const [keyword, setKeyword] = useState<string>(initialValue)
+  const [keyword, setKeyword] = useState<string>(initialValue);
   const filteredData = property
     ? data.filter((x) => x[property].toString().includes(keyword))
-    : data.filter((x) => x.toString().includes(keyword))
+    : data.filter((x) => x.toString().includes(keyword));
 
   const searchProps: InputProps = {
     value: keyword,
     onChange: (e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value),
-  }
+  };
 
-  return { searchProps, filteredData }
-}
+  return { searchProps, filteredData };
+};
 
-export default useSearch
+export default useSearch;

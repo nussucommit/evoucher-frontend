@@ -1,63 +1,63 @@
-import React, { useState } from "react"
-import { Formik, Form, FormikHelpers } from "formik"
-import * as yup from "yup"
+import React, { useState } from "react";
+import { Formik, Form, FormikHelpers } from "formik";
+import * as yup from "yup";
 
-import { Routes } from "constants/routes"
-import { login, verifyOrganization } from "api/auth"
-import history from "utils/history"
-import useAuth from "hooks/useAuth"
-import useRequestState from "hooks/useRequestState"
+import { Routes } from "constants/routes";
+import { login, verifyOrganization } from "api/auth";
+import history from "utils/history";
+import useAuth from "hooks/useAuth";
+import useRequestState from "hooks/useRequestState";
 
-import { Button, Heading, Alert } from "@commitUI/index"
-import { Input } from "components/Form"
-import Navbar from "components/Navbar"
+import { Button, Heading, Alert } from "@commitUI/index";
+import { Input } from "components/Form";
+import Navbar from "components/Navbar";
 
-import styles from "./AdminLogin.module.css"
-import logo from "assets/images/logo.png"
-import logo2 from "assets/images/logo2.jpeg"
+import styles from "./AdminLogin.module.css";
+import logo from "assets/images/logo.png";
+import logo2 from "assets/images/logo2.jpeg";
 
 interface Values {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 
 const AdminLogin = () => {
-  const state = useRequestState()
+  const state = useRequestState();
   const initialValues: Values = {
     username: "",
     password: "",
-  }
+  };
 
   const validationSchema: yup.SchemaOf<Values> = yup.object({
     username: yup.string().required("Required"),
     password: yup.string().required("Required"),
-  })
+  });
 
-  const { adminLogin: localLogin } = useAuth() // Local session login
+  const { adminLogin: localLogin } = useAuth(); // Local session login
 
   const handleLogin = async (
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
     try {
-      state.start()
+      state.start();
       await verifyOrganization({
         username: values.username,
-      })
+      });
       const { data: token } = await login({
         username: values.username,
         password: values.password,
-      })
-      localLogin(token)
-      formikHelpers.setSubmitting(false)
-      history.push(Routes.adminHome)
+      });
+      localLogin(token);
+      formikHelpers.setSubmitting(false);
+      history.push(Routes.adminHome);
     } catch (e) {
       state.setError(
         "The username and password you entered did not match our records. Please try again."
-      )
+      );
     }
-    state.end()
-  }
+    state.end();
+  };
 
   return (
     <>
@@ -118,7 +118,7 @@ const AdminLogin = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AdminLogin
+export default AdminLogin;

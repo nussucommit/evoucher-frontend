@@ -4,8 +4,8 @@ import { Story, Meta } from "@storybook/react";
 import { Heading, Props } from ".";
 
 export default {
-    title: "Components/Heading",
-    component: Heading,
+  title: "Components/Heading",
+  component: Heading,
 } as Meta;
 
 const Template: Story<Props> = (args) => <Heading {...args} />;

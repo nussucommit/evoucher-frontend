@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "react"
+import { useLayoutEffect } from "react";
 
-import history from "utils/history"
+import history from "utils/history";
 
 /**
  * React hook to redirect to another screen given some condition
@@ -10,8 +10,8 @@ import history from "utils/history"
  */
 const useRedirect = (to: string, condition: boolean): void => {
   useLayoutEffect(() => {
-    if (condition) history.push(to)
-  }, [condition, to])
-}
+    if (condition) history.push(to);
+  }, [condition, to]);
+};
 
-export default useRedirect
+export default useRedirect;

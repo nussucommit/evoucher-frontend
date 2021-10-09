@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react"
+import React, { Dispatch, SetStateAction } from "react";
 import {
   Table as ChakraTable,
   Thead,
@@ -8,7 +8,7 @@ import {
   Td,
   chakra,
   TableProps,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -16,28 +16,28 @@ import {
   ChevronRightIcon,
   TriangleDownIcon,
   TriangleUpIcon,
-} from "@chakra-ui/icons"
-import { useTable, useSortBy, Column, usePagination } from "react-table"
+} from "@chakra-ui/icons";
+import { useTable, useSortBy, Column, usePagination } from "react-table";
 
-import { Text } from "../Text"
-import { IconButton } from "../IconButton"
-import { Select } from "../Select"
+import { Text } from "../Text";
+import { IconButton } from "../IconButton";
+import { Select } from "../Select";
 
-import styles from "./Table.module.css"
+import styles from "./Table.module.css";
 
 export type Props<DataType extends {}> = TableProps & {
   // To-do
-  data: DataType[]
-  columns: Column<DataType>[]
-  currentPage?: number
-  setPage?: Dispatch<SetStateAction<number>>
-  perPage?: number
-  setPerPage?: Dispatch<SetStateAction<number>>
-  totalPage?: number
-  hasNextPage?: boolean
-  hasPrevPage?: boolean
-  onRowClick?: (id: string) => void
-}
+  data: DataType[];
+  columns: Column<DataType>[];
+  currentPage?: number;
+  setPage?: Dispatch<SetStateAction<number>>;
+  perPage?: number;
+  setPerPage?: Dispatch<SetStateAction<number>>;
+  totalPage?: number;
+  hasNextPage?: boolean;
+  hasPrevPage?: boolean;
+  onRowClick?: (id: string) => void;
+};
 
 export const Table = <DataType extends {}>({
   data,
@@ -70,7 +70,7 @@ export const Table = <DataType extends {}>({
             pageIndex: currentPage,
           }),
           [state, currentPage]
-        )
+        );
       },
       initialState: { pageIndex: currentPage }, // Pass our hoisted table state
       manualPagination: true,
@@ -78,7 +78,7 @@ export const Table = <DataType extends {}>({
     },
     useSortBy,
     usePagination
-  )
+  );
 
   return (
     <>
@@ -111,7 +111,7 @@ export const Table = <DataType extends {}>({
         </Thead>
         <Tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
-            prepareRow(row)
+            prepareRow(row);
             return (
               <Tr
                 {...row.getRowProps()}
@@ -123,7 +123,7 @@ export const Table = <DataType extends {}>({
                   </Td>
                 ))}
               </Tr>
-            )
+            );
           })}
         </Tbody>
 
@@ -135,7 +135,7 @@ export const Table = <DataType extends {}>({
               <Select
                 defaultValue={{ label: perPage, value: perPage }}
                 onChange={(option: { value: number; label: number }) => {
-                  setPerPage(option.value)
+                  setPerPage(option.value);
                 }}
                 options={[
                   { label: 10, value: 10 },
@@ -216,5 +216,5 @@ export const Table = <DataType extends {}>({
         )}
       </ChakraTable>
     </>
-  )
-}
+  );
+};

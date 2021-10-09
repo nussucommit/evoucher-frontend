@@ -1,17 +1,17 @@
-import React from "react"
-import { useField } from "formik"
+import React from "react";
+import { useField } from "formik";
 
-import { DateInput as BaseDateInput, DateInputProps } from "@commitUI/index"
+import { DateInput as BaseDateInput, DateInputProps } from "@commitUI/index";
 
 type Props = Omit<DateInputProps, "onBlur" | "onChange"> & {
-  name: string
-}
+  name: string;
+};
 
 export const DateInput = ({ name, label, ...props }: Props) => {
-  const [field, meta, helper] = useField(name)
-  const { onBlur } = field
-  const { setValue } = helper
-  const { error, touched } = meta
+  const [field, meta, helper] = useField(name);
+  const { onBlur } = field;
+  const { setValue } = helper;
+  const { error, touched } = meta;
 
   return (
     <BaseDateInput
@@ -20,8 +20,10 @@ export const DateInput = ({ name, label, ...props }: Props) => {
       id={name}
       label={label}
       error={touched && error ? error : ""}
-      onChange={(date: Date | [Date | null, Date | null] | null) => setValue(date)}
+      onChange={(date: Date | [Date | null, Date | null] | null) =>
+        setValue(date)
+      }
       onBlur={onBlur}
     />
-  )
-}
+  );
+};

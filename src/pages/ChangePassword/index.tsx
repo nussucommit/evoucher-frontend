@@ -1,51 +1,51 @@
-import React, { useEffect } from "react"
-import { Formik, Form, FormikHelpers } from "formik"
-import * as yup from "yup"
+import React, { useEffect } from "react";
+import { Formik, Form, FormikHelpers } from "formik";
+import * as yup from "yup";
 
-import useAuth from "hooks/useAuth"
-import { changePassword, logout } from "api/auth"
-import history from "utils/history"
-import { getToken } from "utils/auth"
-import { useUser } from "api/user"
-import { useOrganization, updateOrganization } from "api/organization"
-import useModal from "hooks/useModal"
+import useAuth from "hooks/useAuth";
+import { changePassword, logout } from "api/auth";
+import history from "utils/history";
+import { getToken } from "utils/auth";
+import { useUser } from "api/user";
+import { useOrganization, updateOrganization } from "api/organization";
+import useModal from "hooks/useModal";
 
-import { Alert, Button, Heading } from "@commitUI/index"
-import { Input } from "components/Form"
+import { Alert, Button, Heading } from "@commitUI/index";
+import { Input } from "components/Form";
 
-import styles from "./ChangePassword.module.css"
-import logo from "assets/images/logo.png"
-import logo2 from "assets/images/logo2.jpeg"
-import { Routes } from "constants/routes"
+import styles from "./ChangePassword.module.css";
+import logo from "assets/images/logo.png";
+import logo2 from "assets/images/logo2.jpeg";
+import { Routes } from "constants/routes";
 
 interface Values {
-  old_password: string
-  new_password: string
-  confirm_password: string
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
 }
 
 const initialValues: Values = {
   old_password: "",
   new_password: "",
   confirm_password: "",
-}
+};
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
   old_password: yup.string().required("Required"),
   new_password: yup.string().required("Required"),
   confirm_password: yup.string().required("Required"),
-})
+});
 
 const ChangePassword = () => {
-  const { onOpen, onClose } = useModal()
-  const { logout: localLogout } = useAuth()
-  const { data: user } = useUser()
-  const { data: organization, mutate } = useOrganization(user?.username)
+  const { onOpen, onClose } = useModal();
+  const { logout: localLogout } = useAuth();
+  const { data: user } = useUser();
+  const { data: organization, mutate } = useOrganization(user?.username);
 
   useEffect(() => {
-    onOpen()
-    setTimeout(() => onClose(), 4000)
-  }, [])
+    onOpen();
+    setTimeout(() => onClose(), 4000);
+  }, []);
 
   const handleChangePassword = async (
     values: Values,
@@ -53,38 +53,38 @@ const ChangePassword = () => {
   ) => {
     try {
       if (values.new_password !== values.confirm_password) {
-        throw new Error("Wrong confirm password")
+        throw new Error("Wrong confirm password");
       }
 
       await changePassword({
         old_password: values.old_password,
         new_password: values.new_password,
-      })
+      });
 
       if (organization?.name) {
         await mutate(
           await updateOrganization(organization.name, {
             is_first_time_login: false,
           })
-        )
+        );
       }
 
-      const token = getToken()
-      logout({ refresh_token: token!.refresh })
-      formikHelpers.setSubmitting(false)
+      const token = getToken();
+      logout({ refresh_token: token!.refresh });
+      formikHelpers.setSubmitting(false);
 
-      localLogout()
+      localLogout();
       if (organization) {
-        history.push(Routes.adminLogin)
+        history.push(Routes.adminLogin);
       } else {
-        history.push(Routes.login)
+        history.push(Routes.login);
       }
     } catch (e) {
       // To-do: Make an alert card like on twitter to display the error message
-      formikHelpers.setFieldError("password", "Wrong password.")
-      console.log(e)
+      formikHelpers.setFieldError("password", "Wrong password.");
+      console.log(e);
     }
-  }
+  };
 
   return (
     <>
@@ -153,7 +153,7 @@ const ChangePassword = () => {
         </Heading>
       </Modal> */}
     </>
-  )
-}
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;

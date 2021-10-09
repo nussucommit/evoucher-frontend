@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react"
+import { useRef, useEffect } from "react";
 
 /**
  * React hook to store previous value
@@ -6,11 +6,11 @@ import { useRef, useEffect } from "react"
  * @param value variable whose previous value you want to keep track of
  */
 const usePrevious = <T extends unknown>(value: T) => {
-  const ref = useRef<T>()
+  const ref = useRef<T>();
   useEffect(() => {
-    ref.current = value
-  }, [value])
-  return ref.current
-}
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+};
 
-export default usePrevious
+export default usePrevious;

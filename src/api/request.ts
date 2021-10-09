@@ -1,16 +1,16 @@
-import axios from "axios"
+import axios from "axios";
 
-import history from "utils/history"
-import { getToken, deleteToken, saveToken } from "utils/auth"
-import { API_URL } from "constants/config"
-import { Routes } from "constants/routes"
-import session from "utils/sessionStorage"
-import useAuth from "hooks/useAuth"
+import history from "utils/history";
+import { getToken, deleteToken, saveToken } from "utils/auth";
+import { API_URL } from "constants/config";
+import { Routes } from "constants/routes";
+import session from "utils/sessionStorage";
+import useAuth from "hooks/useAuth";
 
-export const REFRESH_TOKEN_ENDPOINT = "/token/refresh"
+export const REFRESH_TOKEN_ENDPOINT = "/token/refresh";
 // Code returned by backend if refresh token is invalid or expired
-const TOKEN_EXPIRED_CODE = "token_not_valid"
-const NO_AUTHENTICATION_CODE = "Authentication credentials were not provided."
+const TOKEN_EXPIRED_CODE = "token_not_valid";
+const NO_AUTHENTICATION_CODE = "Authentication credentials were not provided.";
 
 // Create an Axios instance with custom config
 const request = axios.create({
@@ -22,30 +22,30 @@ const request = axios.create({
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
   },
-})
+});
 
 const logout = () => {
-  deleteToken()
-  useAuth.setState({ isAuth: undefined })
-}
+  deleteToken();
+  useAuth.setState({ isAuth: undefined });
+};
 
 request.interceptors.request.use(
   (config) => {
     if (!config.headers["Authorization"]) {
-      const token = getToken()
+      const token = getToken();
       if (token) {
-        config.headers["Authorization"] = `Bearer ${token.access}`
+        config.headers["Authorization"] = `Bearer ${token.access}`;
       }
     }
-    return config
+    return config;
   },
   (error) => Promise.reject(error)
-)
+);
 
 request.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config
+    const originalRequest = error.config;
 
     // Logout
     if (
@@ -56,12 +56,12 @@ request.interceptors.response.use(
       // Case: user auth error
       error.response?.data?.detail === NO_AUTHENTICATION_CODE
     ) {
-      logout()
-      return
+      logout();
+      return;
     }
 
     // Refresh access token attempt
-    const token = getToken()
+    const token = getToken();
     if (
       error.response?.status === 401 &&
       error.response?.data?.code === TOKEN_EXPIRED_CODE
@@ -72,32 +72,32 @@ request.interceptors.response.use(
           const { data } = await request.post<{ access: string }>(
             REFRESH_TOKEN_ENDPOINT,
             { refresh: token.refresh }
-          )
+          );
           const newToken: Token = {
             access: data.access,
             refresh: token.refresh,
-          }
+          };
 
           // Save token to session storage
-          saveToken(newToken, token.authType)
+          saveToken(newToken, token.authType);
 
           // Append new access token to request header
-          originalRequest.headers["Authorization"] = `Bearer ${data.access}`
+          originalRequest.headers["Authorization"] = `Bearer ${data.access}`;
 
           // Retry the request again with the new token
-          return request.request(originalRequest)
+          return request.request(originalRequest);
         } catch {
-          logout()
-          return
+          logout();
+          return;
         }
       } else {
-        logout()
-        return
+        logout();
+        return;
       }
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export default request
+export default request;
