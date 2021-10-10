@@ -33,7 +33,6 @@ import {
   checkDateFormat,
   displayDate,
   formatDate,
-  toDateObject,
 } from "utils/date";
 import { isSameFileUrl } from "utils/file";
 import { focusElementWithHotkey } from "utils/focusElement";
@@ -180,9 +179,9 @@ const Home = () => {
     formikHelpers: FormikHelpers<Values>
   ) => {
     const data = {
-      posted_date: formatDate(new Date()),
-      available_date: formatDate(toDateObject(values.availableDate)),
-      expiry_date: formatDate(toDateObject(values.expiryDate)),
+      posted_date: formatDate(new Date().toString()),
+      available_date: formatDate(values.availableDate),
+      expiry_date: formatDate(values.expiryDate),
       name: values.name,
       voucher_type: values.type.value as string,
       description: values.description,
@@ -295,6 +294,7 @@ const AdminVoucherModal = ({
   } = useFormikContext<Values>();
   const isOpen = Boolean(type);
   const isAdd = type === types.ADD;
+
   useEffect(() => {
     if (!isAdd) {
       setValues({
