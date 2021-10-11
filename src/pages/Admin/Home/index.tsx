@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Column } from "react-table";
+import moment from "moment";
 
 import { useUser } from "api/user";
 import { Routes } from "constants/routes";
@@ -126,6 +127,12 @@ const Home = () => {
     "name"
   );
 
+  const checkIsExpire = (expiredDate: any) => {
+    const dateLimit = moment(expiredDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+    const now = moment();
+    return now.isAfter(dateLimit);
+  }
+
   useRedirect(
     Routes.adminChangePassword,
     Boolean(organization) && organization!.is_first_time_login
@@ -153,6 +160,11 @@ const Home = () => {
       {
         Header: "Expiry Date",
         accessor: "expiry_date",
+        Cell: s => (
+          <span className={checkIsExpire(s.value) ? styles.expired : ""}>
+            {s.value} 
+          </span>
+        ),
       },
       {
         Header: "Voucher Type",
