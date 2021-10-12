@@ -6,6 +6,7 @@ import moment from "moment";
 
 import { useUser } from "api/user";
 import { Routes } from "constants/routes";
+import { EXPIRED_DATE_FORMAT } from "constants/date";
 import { useOrganization, useOrganizationVouchers } from "api/organization";
 import {
   createVoucher,
@@ -127,8 +128,8 @@ const Home = () => {
     "name"
   );
 
-  const checkIsExpire = (expiredDate: any) => {
-    const dateLimit = moment(expiredDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+  const checkIsExpire = (expiredDate: string) => {
+    const dateLimit = moment(expiredDate, EXPIRED_DATE_FORMAT);
     const now = moment();
     return now.isAfter(dateLimit);
   }
