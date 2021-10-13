@@ -7,9 +7,7 @@
   -webkit-box-shadow: 0 16px 30px -8px rgba(112, 144, 176, 0.3);
           box-shadow: 0 16px 30px -8px rgba(112, 144, 176, 0.3);
   border: none;
-  max-width: -webkit-fit-content;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
+  max-width: 300px;
 }
 
 .imgContainer {

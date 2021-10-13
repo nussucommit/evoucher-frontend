@@ -8,6 +8,8 @@ import { Emails } from "constants/email";
 import VoucherCard, { VoucherCardSkeleton } from "components/VoucherCard";
 import VoucherModal from "components/VoucherModal";
 
+import styles from "./Home.module.css";
+
 const Home = () => {
   const { data: user } = useUser();
   const { isOpen, onClose, onOpen } = useModal();
@@ -41,13 +43,8 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#fff", margin: 32 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          }}
-        >
+      <div className={styles.screen}>
+        <div className={styles.container}>
           {vouchers?.data
             ? vouchers.data?.map((voucher) => (
                 <VoucherCard
