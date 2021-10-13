@@ -2,20 +2,22 @@ import React, { useState } from "react";
 
 import useModal from "hooks/useModal";
 import { useDynamicVouchers, useVoucher, useVouchers } from "api/voucher";
+import { useUser } from "api/user";
+import { Emails } from "constants/email";
 
 import VoucherCard, { VoucherCardSkeleton } from "components/VoucherCard";
 import VoucherModal from "components/VoucherModal";
-import Navbar from "components/Navbar";
 
 const Home = () => {
+  const { data: user } = useUser();
   const { isOpen, onClose, onOpen } = useModal();
   const { data: vouchers, mutate: mutateVouchers } = useVouchers(
-    "e0123456789@u.nus.edu"
-  ); // placeholder email
+    user?.username + Emails.studentDomain
+  );
   const {
     data: dynamicVouchers,
     mutate: mutateDynamicVouchers,
-  } = useDynamicVouchers("e0123456789@u.nus.edu"); // placeholder email
+  } = useDynamicVouchers(user?.username + Emails.studentDomain);
   const [openVoucher, setOpenVoucher] = useState<number>(0);
   const { data: voucher, isValidating } = useVoucher(openVoucher);
   const arr = React.useMemo(() => [...Array(20)], []);
