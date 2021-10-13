@@ -11,8 +11,8 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   margin-right: var(--spacing-2xl);
 }
 
@@ -24,6 +24,10 @@
   margin: var(--spacing-base) auto;
   width: 95%;
   border-radius: var(--border-radius);
+}
+
+.screen .expired {
+  color: red;
 }
 
 .screen .upload {
