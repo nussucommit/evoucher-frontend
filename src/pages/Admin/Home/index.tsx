@@ -32,7 +32,8 @@ import useSearch from "hooks/useSearch";
 import {
   checkDateFormat,
   displayDate,
-  formatDate,
+  formatDisplayDate,
+  formatLongDate,
 } from "utils/date";
 import { isSameFileUrl } from "utils/file";
 import { focusElementWithHotkey } from "utils/focusElement";
@@ -147,11 +148,11 @@ const Home = () => {
       },
       {
         Header: "Available Date",
-        accessor: "available_date",
+        accessor: row => formatDisplayDate(row.available_date),
       },
       {
         Header: "Expiry Date",
-        accessor: "expiry_date",
+        accessor: row => formatDisplayDate(row.expiry_date),
       },
       {
         Header: "Voucher Type",
@@ -179,9 +180,9 @@ const Home = () => {
     formikHelpers: FormikHelpers<Values>
   ) => {
     const data = {
-      posted_date: formatDate(new Date().toString()),
-      available_date: formatDate(values.availableDate),
-      expiry_date: formatDate(values.expiryDate),
+      posted_date: formatLongDate(new Date().toString()),
+      available_date: formatLongDate(values.availableDate),
+      expiry_date: formatLongDate(values.expiryDate),
       name: values.name,
       voucher_type: values.type.value as string,
       description: values.description,

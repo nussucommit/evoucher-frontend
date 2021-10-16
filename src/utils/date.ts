@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { DATE_FORMAT, DATE_LONG_FORMAT } from "constants/date";
+import { DATE_DISPLAY_FORMAT, DATE_FORMAT, DATE_LONG_FORMAT } from "constants/date";
 
 export const parseDate = (str: string) => new Date(str.replace(" ", "T"));
 
@@ -34,10 +34,13 @@ export const rawDate = (date: string) => {
   return new Date(splitted.join("/"));
 };
 
-export const formatDate = (date: string): string => {
-  const dateObject = new Date(date);
-  return format(dateObject, DATE_LONG_FORMAT);
+export const formatLongDate = (date: string): string => {
+  return format(new Date(date), DATE_LONG_FORMAT);
 };
+
+export const formatDisplayDate = (date: string): string => {
+  return format(new Date(date), DATE_DISPLAY_FORMAT);
+}
 
 export const checkDateFormat = (date?: string): boolean => {
   return date !== undefined &&
