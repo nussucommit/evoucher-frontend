@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Column } from "react-table";
-import moment from "moment";
 
 import { useUser } from "api/user";
 import { Routes } from "constants/routes";
-import { EXPIRED_DATE_FORMAT } from "constants/date";
 import { useOrganization, useOrganizationVouchers } from "api/organization";
 import {
   createVoucher,
@@ -129,9 +127,9 @@ const Home = () => {
   );
 
   const checkIsExpire = (expiredDate: string) => {
-    const dateLimit = moment(expiredDate, EXPIRED_DATE_FORMAT);
-    const now = moment();
-    return now.isAfter(dateLimit);
+    const now = Date.now();
+    const expired = Date.parse(expiredDate);
+    return now > expired;
   }
 
   useRedirect(
@@ -161,7 +159,7 @@ const Home = () => {
       {
         Header: "Expiry Date",
         accessor: row => formatDisplayDate(row.expiry_date),
-        Cell: s => (
+        Cell: (s: any) => (
           <span className={checkIsExpire(s.value) ? styles.expired : ""}>
             {s.value} 
           </span>
