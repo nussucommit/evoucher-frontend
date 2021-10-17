@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { DATE_FORMAT } from "constants/date";
+import { DATE_DISPLAY_FORMAT, DATE_FORMAT, DATE_LONG_FORMAT } from "constants/date";
 
 export const parseDate = (str: string) => new Date(str.replace(" ", "T"));
 
@@ -16,7 +16,9 @@ export const displayDate = (date: string) => {
   const month = raw.getMonth() + 1; // getMonth() returns 0 – 11
   const year = raw.getFullYear();
 
-  return padDate(day.toString()) + "/" + padDate(month.toString()) + "/" + year;
+  // this is a bit counterintuitive, but yeah here's the fix: somehow date picker receives
+  // MM/dd/yyyy by default, despite the display date is dd/MM/yyyy.
+  return padDate(month.toString()) + "/" + padDate(day.toString()) + "/" + year;
 };
 
 const padDate = (date: string) => {
@@ -32,20 +34,16 @@ export const rawDate = (date: string) => {
   return new Date(splitted.join("/"));
 };
 
-export const toDateObject = (date: string): Date => {
-  return new Date(
-    parseInt(date.substring(6)),
-    parseInt(date.substring(3, 6)) - 1,
-    parseInt(date.substring(0, 3))
-  );
+export const formatLongDate = (date: string): string => {
+  return format(new Date(date), DATE_LONG_FORMAT);
 };
 
-export const formatDate = (date: Date): string => {
-  return format(date, DATE_FORMAT);
-};
+export const formatDisplayDate = (date: string): string => {
+  return format(new Date(date), DATE_DISPLAY_FORMAT);
+}
 
 export const checkDateFormat = (date?: string): boolean => {
-  return (
-    date?.charAt(2) === "/" && date?.charAt(5) === "/" && date?.length == 10
-  );
+  return date !== undefined &&
+         date.length > 0 &&
+         !isNaN(Date.parse(date));
 };

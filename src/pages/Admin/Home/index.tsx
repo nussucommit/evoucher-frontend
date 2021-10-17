@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Column } from "react-table";
-import moment from "moment";
 
 import { useUser } from "api/user";
 import { Routes } from "constants/routes";
-import { EXPIRED_DATE_FORMAT } from "constants/date";
 import { useOrganization, useOrganizationVouchers } from "api/organization";
 import {
   createVoucher,
@@ -34,8 +32,8 @@ import useSearch from "hooks/useSearch";
 import {
   checkDateFormat,
   displayDate,
-  formatDate,
-  toDateObject,
+  formatDisplayDate,
+  formatLongDate,
 } from "utils/date";
 import { isSameFileUrl } from "utils/file";
 import { focusElementWithHotkey } from "utils/focusElement";
@@ -129,9 +127,9 @@ const Home = () => {
   );
 
   const checkIsExpire = (expiredDate: string) => {
-    const dateLimit = moment(expiredDate, EXPIRED_DATE_FORMAT);
-    const now = moment();
-    return now.isAfter(dateLimit);
+    const now = Date.now();
+    const expired = Date.parse(expiredDate);
+    return now > expired;
   }
 
   useRedirect(
@@ -156,12 +154,12 @@ const Home = () => {
       },
       {
         Header: "Available Date",
-        accessor: "available_date",
+        accessor: row => formatDisplayDate(row.available_date),
       },
       {
         Header: "Expiry Date",
-        accessor: "expiry_date",
-        Cell: s => (
+        accessor: row => formatDisplayDate(row.expiry_date),
+        Cell: (s: any) => (
           <span className={checkIsExpire(s.value) ? styles.expired : ""}>
             {s.value} 
           </span>
@@ -193,9 +191,9 @@ const Home = () => {
     formikHelpers: FormikHelpers<Values>
   ) => {
     const data = {
-      posted_date: formatDate(new Date()),
-      available_date: formatDate(toDateObject(values.availableDate)),
-      expiry_date: formatDate(toDateObject(values.expiryDate)),
+      posted_date: formatLongDate(new Date().toString()),
+      available_date: formatLongDate(values.availableDate),
+      expiry_date: formatLongDate(values.expiryDate),
       name: values.name,
       voucher_type: values.type.value as string,
       description: values.description,
@@ -308,6 +306,7 @@ const AdminVoucherModal = ({
   } = useFormikContext<Values>();
   const isOpen = Boolean(type);
   const isAdd = type === types.ADD;
+
   useEffect(() => {
     if (!isAdd) {
       setValues({
