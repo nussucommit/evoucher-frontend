@@ -144,10 +144,10 @@ const Home = () => {
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
-      // {
-      //   Header: "ID",
-      //   accessor: "uuid",
-      // },
+      {
+        Header: "ID",
+        accessor: "uuid",
+      },
       {
         Header: "Voucher Name",
         accessor: "name",
