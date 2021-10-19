@@ -6,7 +6,7 @@ td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: var(--spacing-base) var(--spacing-xl);
+  margin: var(--spacing-xs) var(--spacing-lg);
 
   .left {
     display: flex;
@@ -21,6 +21,9 @@ td {
   .middle {
     display: flex;
     align-items: center;
+  }
+
+  .right {
   }
 }
 
