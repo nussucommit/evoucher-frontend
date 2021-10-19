@@ -16,6 +16,15 @@ import {
 import usePagination from "hooks/usePagination";
 import { VOUCHER_TYPE_OPTIONS } from "constants/options";
 import useRedirect from "hooks/useRedirect";
+import useSearch from "hooks/useSearch";
+import {
+  checkDateFormat,
+  displayDate,
+  formatDisplayDate,
+  formatLongDate,
+} from "utils/date";
+import { isSameFileUrl } from "utils/file";
+import { focusElementWithHotkey } from "utils/focusElement";
 
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
 import { Table } from "@commitUI";
@@ -28,15 +37,6 @@ import {
   GroupInput,
   DateInput,
 } from "components/Form";
-import useSearch from "hooks/useSearch";
-import {
-  checkDateFormat,
-  displayDate,
-  formatDisplayDate,
-  formatLongDate,
-} from "utils/date";
-import { isSameFileUrl } from "utils/file";
-import { focusElementWithHotkey } from "utils/focusElement";
 
 import styles from "./AdminHome.module.scss";
 
@@ -130,7 +130,7 @@ const Home = () => {
     const now = Date.now();
     const expired = Date.parse(expiredDate);
     return now > expired;
-  }
+  };
 
   useRedirect(
     Routes.adminChangePassword,
@@ -144,24 +144,24 @@ const Home = () => {
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
-      {
-        Header: "ID",
-        accessor: "uuid",
-      },
+      // {
+      //   Header: "ID",
+      //   accessor: "uuid",
+      // },
       {
         Header: "Voucher Name",
         accessor: "name",
       },
       {
         Header: "Available Date",
-        accessor: row => formatDisplayDate(row.available_date),
+        accessor: (row) => formatDisplayDate(row.available_date),
       },
       {
         Header: "Expiry Date",
-        accessor: row => formatDisplayDate(row.expiry_date),
+        accessor: (row) => formatDisplayDate(row.expiry_date),
         Cell: (s: any) => (
           <span className={checkIsExpire(s.value) ? styles.expired : ""}>
-            {s.value} 
+            {s.value}
           </span>
         ),
       },

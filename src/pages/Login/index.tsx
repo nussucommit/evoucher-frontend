@@ -111,7 +111,7 @@ const Login = () => {
         </Formik>
 
         <div className={styles.linkTextContainer}>
-          <Button type="text">Forgot password?</Button>
+          {/* <Button type="text">Forgot password?</Button> */}
           {/* <span> • </span>
                     <Button type="text" className={styles.btnRight}>
                         Sign Up

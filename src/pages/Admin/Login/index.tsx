@@ -113,9 +113,9 @@ const AdminLogin = () => {
           </Form>
         </Formik>
 
-        <div className={styles.linkTextContainer}>
+        {/* <div className={styles.linkTextContainer}>
           <Button type="text">Forgot password?</Button>
-        </div>
+        </div> */}
       </div>
     </>
   );

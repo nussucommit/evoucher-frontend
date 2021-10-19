@@ -85,7 +85,7 @@ export const Table = <DataType extends {}>({
       <ChakraTable
         {...getTableProps()}
         {...tableProps}
-        d="inline-block"
+        d="inline-table"
         border="1px solid"
         borderColor="gray.300"
       >
@@ -126,30 +126,30 @@ export const Table = <DataType extends {}>({
             );
           })}
         </Tbody>
+      </ChakraTable>
+      {setPage && setPerPage && totalPage && perPage && (
+        <div className={styles.footer}>
+          <div className={styles.left}>
+            <Text span>Rows per page: </Text>
+            {"  "}
+            <Select
+              defaultValue={{ label: perPage, value: perPage }}
+              onChange={(option: { value: number; label: number }) => {
+                setPerPage(option.value);
+              }}
+              options={[
+                { label: 10, value: 10 },
+                { label: 20, value: 20 },
+                { label: 30, value: 30 },
+                { label: 40, value: 40 },
+                { label: 50, value: 50 },
+              ]}
+              className={styles.select}
+            />
+          </div>
 
-        {setPage && setPerPage && totalPage && perPage && (
-          <div className={styles.footer}>
-            <div className={styles.left}>
-              <Text span>Rows per page: </Text>
-              {"  "}
-              <Select
-                defaultValue={{ label: perPage, value: perPage }}
-                onChange={(option: { value: number; label: number }) => {
-                  setPerPage(option.value);
-                }}
-                options={[
-                  { label: 10, value: 10 },
-                  { label: 20, value: 20 },
-                  { label: 30, value: 30 },
-                  { label: 40, value: 40 },
-                  { label: 50, value: 50 },
-                ]}
-                className={styles.select}
-              />
-            </div>
-
-            <div className={styles.middle}>
-              {/* <Text>Jump to page:</Text>{" "}
+          <div className={styles.middle}>
+            {/* <Text>Jump to page:</Text>{" "}
               <NumberInput
                 ml={2}
                 mr={8}
@@ -168,53 +168,52 @@ export const Table = <DataType extends {}>({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput> */}
-            </div>
-
-            <div>
-              <Text span className={styles.text}>
-                Page{" "}
-                <Text bold span>
-                  {pageIndex}
-                </Text>{" "}
-                of <Text span>{totalPage}</Text>
-              </Text>
-
-              <IconButton
-                label="First Page"
-                onClick={() => setPage(1)}
-                isDisabled={!hasPrevPage}
-                icon={<ArrowLeftIcon h={3} w={3} />}
-                backgroundColor="white"
-                className={styles.icon}
-              />
-              <IconButton
-                label="Previous Page"
-                onClick={() => setPage(pageIndex - 1)}
-                isDisabled={!hasPrevPage}
-                icon={<ChevronLeftIcon h={6} w={6} />}
-                backgroundColor="white"
-                className={styles.icon}
-              />
-              <IconButton
-                label="Next Page"
-                onClick={() => setPage(pageIndex + 1)}
-                isDisabled={!hasNextPage}
-                icon={<ChevronRightIcon h={6} w={6} />}
-                backgroundColor="white"
-                className={styles.icon}
-              />
-              <IconButton
-                label="Last Page"
-                onClick={() => setPage(totalPage)}
-                isDisabled={!hasNextPage}
-                icon={<ArrowRightIcon h={3} w={3} />}
-                backgroundColor="white"
-                className={styles.icon}
-              />
-            </div>
           </div>
-        )}
-      </ChakraTable>
+
+          <div className={styles.right}>
+            <Text span className={styles.text}>
+              Page{" "}
+              <Text bold span>
+                {pageIndex}
+              </Text>{" "}
+              of <Text span>{totalPage}</Text>
+            </Text>
+
+            <IconButton
+              label="First Page"
+              onClick={() => setPage(1)}
+              isDisabled={!hasPrevPage}
+              icon={<ArrowLeftIcon h={3} w={3} />}
+              backgroundColor="white"
+              className={styles.icon}
+            />
+            <IconButton
+              label="Previous Page"
+              onClick={() => setPage(pageIndex - 1)}
+              isDisabled={!hasPrevPage}
+              icon={<ChevronLeftIcon h={6} w={6} />}
+              backgroundColor="white"
+              className={styles.icon}
+            />
+            <IconButton
+              label="Next Page"
+              onClick={() => setPage(pageIndex + 1)}
+              isDisabled={!hasNextPage}
+              icon={<ChevronRightIcon h={6} w={6} />}
+              backgroundColor="white"
+              className={styles.icon}
+            />
+            <IconButton
+              label="Last Page"
+              onClick={() => setPage(totalPage)}
+              isDisabled={!hasNextPage}
+              icon={<ArrowRightIcon h={3} w={3} />}
+              backgroundColor="white"
+              className={styles.icon}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
