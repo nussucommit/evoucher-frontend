@@ -39,6 +39,7 @@ import {
 } from "components/Form";
 
 import styles from "./AdminHome.module.scss";
+import { MILLISECONDS_PER_DAY } from "constants/date";
 
 interface Values {
   search?: string;
@@ -126,10 +127,16 @@ const Home = () => {
     "name"
   );
 
+  // assumption: date is always of the format dd/MM/yyyy
+  const correctedDate = (date: string) => {
+    const parts = date.split("/");
+    return new Date(Number(parts[2]), Number(parts[1])-1, Number(parts[0]));
+  }
+
   const checkIsExpire = (expiredDate: string) => {
     const now = Date.now();
-    const expired = Date.parse(expiredDate);
-    return now > expired;
+    const expired = correctedDate(expiredDate).valueOf();
+    return now > expired + MILLISECONDS_PER_DAY;
   };
 
   useRedirect(
