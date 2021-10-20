@@ -38,7 +38,7 @@ export const createVoucher = (
     if (imageFile) formData.append("image", imageFile, imageFile.name);
   }
 
-  request.post("/voucher/", formData);
+  return request.post("/voucher/", formData);
 };
 
 export const editVoucher = (

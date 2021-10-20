@@ -207,7 +207,8 @@ const Home = () => {
     }
 
     if (open === types.ADD) {
-      createVoucher(data, files);
+      await createVoucher(data, files);
+      await revalidate();
     } else if (open === types.EDIT) {
       await editVoucher(selected!.uuid, data, files);
       await revalidate();
