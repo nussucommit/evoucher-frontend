@@ -22,7 +22,7 @@ interface Voucher {
 interface CodeByEmail {
   id: number;
   voucher_id: number;
-  code_id: number;
+  code_id: string;
   email_id: number;
 }
 
@@ -34,7 +34,7 @@ interface CodeEmailInput {
 interface DynamicCode {
   id: string;
   uuid: number;
-  code_id: number;
+  code_id: string;
 }
 
 interface RedeemableVoucher {

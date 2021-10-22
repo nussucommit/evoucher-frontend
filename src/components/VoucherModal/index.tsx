@@ -17,6 +17,7 @@ type Props = Omit<ModalProps, "children"> & {
   isValidating: boolean;
   redeemed?: String[] | undefined;
   onCloseHandler: () => void;
+  code: string;
 };
 
 const VoucherModal = ({
@@ -26,6 +27,7 @@ const VoucherModal = ({
   isOpen,
   onClose,
   isValidating,
+  code,
 }: Props) => {
   const { data: user } = useUser();
   const currVoucher = voucher?.uuid;
@@ -86,6 +88,12 @@ const VoucherModal = ({
           <Text
             className={styles.description}
           >{`${voucher?.description}`}</Text>
+
+          {code !== "" && (
+          <Text
+            className={styles.description}
+          >{`Code: ${code}`}</Text>
+          )}
 
           <hr />
 
