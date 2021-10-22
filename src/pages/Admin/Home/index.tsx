@@ -12,6 +12,7 @@ import {
   uploadCodeList,
   uploadEmailList,
   uploadManualCodes,
+  getNumCodes,
 } from "api/voucher";
 import usePagination from "hooks/usePagination";
 import { VOUCHER_TYPE_OPTIONS } from "constants/options";
@@ -197,6 +198,13 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
+  
+    // im not sure how to continously get the updated count, i can only think of getting the count when submit, do you have any suggestions?
+    
+    const count = await getNumCodes(selected!.uuid); 
+
+    console.log(count)
+
     const data = {
       posted_date: formatLongDate(new Date().toString()),
       available_date: formatLongDate(values.availableDate),
@@ -204,7 +212,7 @@ const Home = () => {
       name: values.name,
       voucher_type: values.type.value as string,
       description: values.description,
-      counter: 0, // To-do
+      counter: count, //-1 returns error for number
       organization: values.organization,
     };
 

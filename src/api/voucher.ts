@@ -23,6 +23,12 @@ export const useDynamicVouchers = (
 export const useVoucher = (voucherID: number, config?: Config<Voucher>) =>
   useRequest<Voucher>({ method: "GET", url: `voucher/${voucherID}` }, config);
 
+export const getNumCodes = (
+  id: string,
+) => {
+    return request.get(`voucher/${id}/getNumCodes/`).then(res => res.data);
+  }
+
 export const createVoucher = (
   data: Partial<PostAdminVoucher>,
   files: AdminVoucherFiles = {}

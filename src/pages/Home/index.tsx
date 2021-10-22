@@ -46,11 +46,8 @@ const Home = () => {
   if (codeIndex === -1) {
     code = ""
   } else {
-    console.log(codeIndex)
     code = codeIndex !== undefined ? ((vouchers?.data[codeIndex]["code_id"])?.toString() || "") : ""
   }
-
-  console.log(code)
 
   return (
     <>
