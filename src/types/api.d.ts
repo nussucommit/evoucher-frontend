@@ -59,6 +59,7 @@ interface AdminVoucher extends AdminVoucherFiles {
   image: string;
   code_uploaded?: boolean;
   organization: string;
+  counter: number;
 }
 
 type PostAdminVoucher = Omit<AdminVoucher, "uuid" | AdminVoucherFiles>;

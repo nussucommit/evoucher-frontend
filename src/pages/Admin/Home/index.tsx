@@ -12,7 +12,6 @@ import {
   uploadCodeList,
   uploadEmailList,
   uploadManualCodes,
-  getNumCodes,
 } from "api/voucher";
 import usePagination from "hooks/usePagination";
 import { VOUCHER_TYPE_OPTIONS } from "constants/options";
@@ -54,6 +53,7 @@ interface Values {
   codeList: string;
   emailList: string;
   manualCodeInputs: CodeEmailInput[];
+  counter: number;
 }
 
 const initialValues: Values = {
@@ -71,6 +71,7 @@ const initialValues: Values = {
   codeList: "",
   emailList: "",
   manualCodeInputs: [{ key: "", value: "" }],
+  counter: 0, 
 };
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -101,6 +102,7 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
   manualCodeInputs: yup.array(),
+  counter: yup.number().default(0),
 });
 
 enum types {
@@ -123,6 +125,7 @@ const Home = () => {
     page: page.toString(),
     page_size: perPage.toString(),
   });
+
   const { searchProps, filteredData: data } = useSearch(
     vouchers.results as AdminVoucher[],
     "name"
@@ -198,12 +201,6 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
-  
-    // im not sure how to continously get the updated count, i can only think of getting the count when submit, do you have any suggestions?
-    
-    const count = await getNumCodes(selected!.uuid); 
-
-    console.log(count)
 
     const data = {
       posted_date: formatLongDate(new Date().toString()),
@@ -212,7 +209,7 @@ const Home = () => {
       name: values.name,
       voucher_type: values.type.value as string,
       description: values.description,
-      counter: count, //-1 returns error for number
+      counter: values.type.value === "Dinamically allocated" ? values.counter : 0, //-1 returns error for number
       organization: values.organization,
     };
 
@@ -233,6 +230,7 @@ const Home = () => {
         await uploadCodeList(selected!.uuid, {
           code_list: values.codeList,
         });
+        await revalidate();
       }
       if (values.emailList) {
         uploadEmailList(selected!.uuid, {
@@ -339,6 +337,7 @@ const AdminVoucherModal = ({
         codeList: "",
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
+        counter: voucher?.counter || 0,
       });
       setIsUploadDisabled(voucher?.voucher_type === "No code");
     }
