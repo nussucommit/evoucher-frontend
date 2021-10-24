@@ -46,12 +46,14 @@ request.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
+    // console.log(error.response?.data?.detail);
+    // console.log(originalRequest.url);
+    // console.log(error.response?.status);
     // Logout
     if (
       // Case: invalid refresh token
       (error.response?.status === 401 &&
-        error.response?.data?.detail === TOKEN_EXPIRED_CODE &&
+        error.response?.data?.code === TOKEN_EXPIRED_CODE &&
         originalRequest.url === REFRESH_TOKEN_ENDPOINT) ||
       // Case: user auth error
       error.response?.data?.detail === NO_AUTHENTICATION_CODE
@@ -68,6 +70,7 @@ request.interceptors.response.use(
     ) {
       if (token) {
         try {
+          console.log("TRY");
           // Call the refresh endpoint to get a new access token
           const { data } = await request.post<{ access: string }>(
             REFRESH_TOKEN_ENDPOINT,
@@ -87,6 +90,7 @@ request.interceptors.response.use(
           // Retry the request again with the new token
           return request.request(originalRequest);
         } catch {
+          console.log("CATCH");
           logout();
           return;
         }

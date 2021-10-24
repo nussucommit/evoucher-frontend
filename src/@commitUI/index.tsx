@@ -28,3 +28,5 @@ export type { ExtendedTextAreaProps as TextAreaProps } from "./components/TextAr
 export { DateInput } from "./components/DateInput";
 export type { DateInputProps } from "./components/DateInput";
 export { Search } from "./components/Search";
+export { Checkbox } from "./components/Checkbox";
+export type { Props as CheckboxProps } from "./components/Checkbox";
