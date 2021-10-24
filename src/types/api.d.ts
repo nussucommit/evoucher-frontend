@@ -37,6 +37,10 @@ interface DynamicCode {
   code_id: number;
 }
 
+interface NoCodeVoucher {
+  uuid: number;
+}
+
 interface RedeemableVoucher {
   id?: string;
   email: string;
