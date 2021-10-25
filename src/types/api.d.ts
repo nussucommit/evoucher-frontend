@@ -59,6 +59,7 @@ interface AdminVoucher extends AdminVoucherFiles {
   name: string;
   voucher_type: string;
   description?: string;
+  eligible_faculties: string;
   counter: number;
   image: string;
   code_uploaded?: boolean;
