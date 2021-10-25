@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
 
-import { redeemVoucher } from "api/voucher";
+import { redeemVoucher, useVouchers } from "api/voucher";
 
 import usePrevious from "hooks/usePrevious";
 import { useUser } from "api/user";
@@ -17,7 +17,6 @@ type Props = Omit<ModalProps, "children"> & {
   isValidating: boolean;
   redeemed?: String[] | undefined;
   onCloseHandler: () => void;
-  code: string;
 };
 
 const VoucherModal = ({
@@ -27,9 +26,11 @@ const VoucherModal = ({
   isOpen,
   onClose,
   isValidating,
-  code,
 }: Props) => {
   const { data: user } = useUser();
+  const { data: vouchers } = useVouchers(
+    user?.username + Emails.studentDomain
+  );
   const currVoucher = voucher?.uuid;
   const prevVoucher = usePrevious(currVoucher);
   const [loading, setLoading] = useState(
@@ -37,6 +38,14 @@ const VoucherModal = ({
   );
   const isRedeemed = redeemed?.includes(voucher?.uuid || "");
   const isDynamic = voucher?.voucher_type === "Dinamically allocated";
+
+  const codeIndex = vouchers?.data.findIndex(x => (x.voucher_id).toString() === voucher?.uuid || "");
+  let code = ""
+  if (codeIndex === -1) {
+    code = ""
+  } else {
+    code = codeIndex !== undefined ? ((vouchers?.data[codeIndex]["code_id"])?.toString() || "") : ""
+  }
 
   const handleRedeem = async () => {
     const data = {

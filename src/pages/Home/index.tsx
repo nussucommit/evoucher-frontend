@@ -41,14 +41,6 @@ const Home = () => {
     onOpen();
   };
 
-  const codeIndex = vouchers?.data.findIndex(x => (x.voucher_id).toString() === voucher?.uuid || "");
-  let code = ""
-  if (codeIndex === -1) {
-    code = ""
-  } else {
-    code = codeIndex !== undefined ? ((vouchers?.data[codeIndex]["code_id"])?.toString() || "") : ""
-  }
-
   return (
     <>
       <div className={styles.screen}>
@@ -81,7 +73,6 @@ const Home = () => {
         onClose={onClose}
         isOpen={isOpen}
         voucher={voucher}
-        code = {code || ""}
         isValidating={isValidating}
         redeemed={dynamicVouchers?.redeemed}
         onCloseHandler={onCloseHandler}
