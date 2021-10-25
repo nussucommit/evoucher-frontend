@@ -37,6 +37,10 @@ interface DynamicCode {
   code_id: string;
 }
 
+interface NoCodeVoucher {
+  uuid: number;
+}
+
 interface RedeemableVoucher {
   id?: string;
   email: string;
@@ -55,6 +59,7 @@ interface AdminVoucher extends AdminVoucherFiles {
   name: string;
   voucher_type: string;
   description?: string;
+  eligible_faculties: string;
   counter: number;
   image: string;
   code_uploaded?: boolean;

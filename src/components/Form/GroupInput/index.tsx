@@ -26,7 +26,6 @@ export const GroupInput = ({
 }: Props) => {
   const [field] = useField(name);
   const { value } = field;
-  console.log(value);
 
   const container = cx(styles.container, className, {
     [styles.disabled]: disabled,

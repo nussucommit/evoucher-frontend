@@ -11,6 +11,15 @@ export const useVouchers = (
     config
   );
 
+export const useNoCodeVouchers = (
+  email: string,
+  config?: Config<{ data: NoCodeVoucher[] }>
+) => 
+  useRequest<{ data: NoCodeVoucher[] }>(
+    { method: "GET", url: `voucher/getNoCodeVoucher/${email}/`},
+    config
+);
+
 export const useDynamicVouchers = (
   email: string,
   config?: Config<{ unredeemed: DynamicCode[]; redeemed: string[] }>

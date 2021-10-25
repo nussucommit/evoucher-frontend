@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Column } from "react-table";
@@ -14,7 +14,7 @@ import {
   uploadManualCodes,
 } from "api/voucher";
 import usePagination from "hooks/usePagination";
-import { VOUCHER_TYPE_OPTIONS } from "constants/options";
+import { FACULTY_OPTIONS, VOUCHER_TYPE_OPTIONS } from "constants/options";
 import useRedirect from "hooks/useRedirect";
 import useSearch from "hooks/useSearch";
 import {
@@ -25,6 +25,12 @@ import {
 } from "utils/date";
 import { isSameFileUrl } from "utils/file";
 import { focusElementWithHotkey } from "utils/focusElement";
+import { MILLISECONDS_PER_DAY } from "constants/date";
+import {
+  checkAllFacultiesPresent,
+  facultiesToOptions,
+  parseFaculties,
+} from "utils/faculty";
 
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
 import { Table } from "@commitUI";
@@ -36,19 +42,20 @@ import {
   TextArea,
   GroupInput,
   DateInput,
+  Checkbox,
 } from "components/Form";
 
 import styles from "./AdminHome.module.scss";
-import { MILLISECONDS_PER_DAY } from "constants/date";
 
 interface Values {
   search?: string;
   availableDate: string;
   expiryDate: string;
   name: string;
-  organization: string;
   description: string;
   type: Option;
+  eligibleFaculties: Option[];
+  isEligibleForAll: boolean;
   image: string;
   codeList: string;
   emailList: string;
@@ -61,12 +68,13 @@ const initialValues: Values = {
   availableDate: "",
   expiryDate: "",
   name: "",
-  organization: "",
   description: "",
   type: {
     label: "",
     value: "",
   },
+  eligibleFaculties: [],
+  isEligibleForAll: false,
   image: "",
   codeList: "",
   emailList: "",
@@ -89,7 +97,6 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
     )
     .required(),
   name: yup.string().required(),
-  organization: yup.string().required(),
   description: yup.string().required(),
   type: yup
     .object()
@@ -98,6 +105,13 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
       label: yup.string(),
     })
     .required("Required"),
+  eligibleFaculties: yup.array().of(
+    yup.object().shape({
+      value: yup.mixed().required("Required"),
+      label: yup.string().required("Required"),
+    })
+  ),
+  isEligibleForAll: yup.boolean().default(false),
   image: yup.string().required(),
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
@@ -134,8 +148,8 @@ const Home = () => {
   // assumption: date is always of the format dd/MM/yyyy
   const correctedDate = (date: string) => {
     const parts = date.split("/");
-    return new Date(Number(parts[2]), Number(parts[1])-1, Number(parts[0]));
-  }
+    return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+  };
 
   const checkIsExpire = (expiredDate: string) => {
     const now = Date.now();
@@ -208,9 +222,12 @@ const Home = () => {
       expiry_date: formatLongDate(values.expiryDate),
       name: values.name,
       voucher_type: values.type.value as string,
+      eligible_faculties: values.isEligibleForAll
+        ? parseFaculties(FACULTY_OPTIONS)
+        : parseFaculties(values.eligibleFaculties),
       description: values.description,
       counter: values.type.value === "Dinamically allocated" ? values.counter : 0, //-1 returns error for number
-      organization: values.organization,
+      organization: organization?.name,
     };
 
     const files: { [key: string]: any } = {};
@@ -317,22 +334,41 @@ const AdminVoucherModal = ({
     submitForm,
     resetForm,
     setFieldValue,
+    values,
   } = useFormikContext<Values>();
+
+  const { isEligibleForAll } = values;
+
+  const eligibleTypes = useMemo(() => ["No code", "Dinamically allocated"], []);
+  const [
+    showEligibleFacultiesOptions,
+    setShowEligibleFacultiesOptions,
+  ] = useState(eligibleTypes.includes(voucher?.voucher_type || ""));
+
   const isOpen = Boolean(type);
   const isAdd = type === types.ADD;
 
+  const handleChange = (option: Option) => {
+    setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
+    setShowEligibleFacultiesOptions(
+      eligibleTypes.includes((option.value as string) || "")
+    );
+  };
+
+  // Initializes the values when editing a voucher
   useEffect(() => {
     if (!isAdd) {
       setValues({
         availableDate: isAdd ? "" : displayDate(voucher?.available_date || ""),
         expiryDate: isAdd ? "" : displayDate(voucher?.expiry_date || ""),
         name: voucher?.name || "",
-        organization: voucher?.organization || "",
         description: voucher?.description || "",
         type: {
           label: voucher?.voucher_type || "",
           value: voucher?.voucher_type || "",
         },
+        eligibleFaculties: facultiesToOptions(voucher?.eligible_faculties),
+        isEligibleForAll: checkAllFacultiesPresent(voucher?.eligible_faculties),
         image: voucher?.image || "",
         codeList: "",
         emailList: "",
@@ -354,9 +390,15 @@ const AdminVoucherModal = ({
     if (!type) resetForm();
   }, [type]);
 
-  const handleChange = (option: Option) => {
-    setIsUploadDisabled(option === VOUCHER_TYPE_OPTIONS[1]);
-  };
+  useEffect(() => {
+    setShowEligibleFacultiesOptions(
+      eligibleTypes.includes(voucher?.voucher_type || "")
+    );
+  }, [voucher, setShowEligibleFacultiesOptions, eligibleTypes]);
+
+  useEffect(() => {
+    setFieldValue("eligibleFaculties", []);
+  }, [isEligibleForAll, setFieldValue]);
 
   return (
     <Modal
@@ -379,12 +421,6 @@ const AdminVoucherModal = ({
 
       <Input name="name" label="Name" className={styles.input} />
 
-      <Input
-        name="organization"
-        label="Organization / Faculty"
-        className={styles.input}
-      />
-
       <TextArea
         name="description"
         label="Description"
@@ -395,10 +431,30 @@ const AdminVoucherModal = ({
         name="type"
         label="Voucher Type"
         options={VOUCHER_TYPE_OPTIONS}
-        isSearchable
         className={styles.input}
-        onChange={(input: Option) => handleChange(input)}
+        onChange={handleChange}
       />
+
+      {showEligibleFacultiesOptions && (
+        <>
+          <Select
+            autoComplete="none"
+            className={styles.facultySelect}
+            name="eligibleFaculties"
+            label="Eligible Faculties"
+            isMulti
+            isSearchable
+            isDisabled={isEligibleForAll}
+            options={FACULTY_OPTIONS}
+          />
+          <Checkbox
+            name="isEligibleForAll"
+            className={styles.input}
+            label="Eligible for all faculties"
+            size="lg"
+          />
+        </>
+      )}
 
       <FileUpload
         label="Upload File"
@@ -428,6 +484,7 @@ const AdminVoucherModal = ({
           )}
         </>
       )}
+
       {voucher?.voucher_type !== "Dinamically allocated" && (
         <GroupInput
           name="manualCodeInputs"

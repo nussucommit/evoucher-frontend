@@ -83,6 +83,10 @@ export const Select = ({
           paddingLeft: 8,
           fontSize: 16,
         }),
+        menu: (provided) => ({
+          ...provided,
+          zIndex: 1001,
+        }),
       }}
     />
   );
