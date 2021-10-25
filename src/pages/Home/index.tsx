@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import useModal from "hooks/useModal";
-import { useDynamicVouchers, useVoucher, useVouchers } from "api/voucher";
+import { useDynamicVouchers, useNoCodeVouchers, useVoucher, useVouchers } from "api/voucher";
 import { useUser } from "api/user";
 import { Emails } from "constants/email";
 
@@ -20,6 +20,10 @@ const Home = () => {
     data: dynamicVouchers,
     mutate: mutateDynamicVouchers,
   } = useDynamicVouchers(user?.username + Emails.studentDomain);
+  const {
+    data: noCodeVouchers,
+    mutate: mutateNoCodeVouchers,
+  } = useNoCodeVouchers(user?.username + Emails.studentDomain);
   const [openVoucher, setOpenVoucher] = useState<number>(0);
   const { data: voucher, isValidating } = useVoucher(openVoucher);
   const arr = React.useMemo(() => [...Array(20)], []);
@@ -32,6 +36,7 @@ const Home = () => {
     onClose();
     mutateDynamicVouchers();
     mutateVouchers();
+    mutateNoCodeVouchers();
   };
 
   const openModal = (voucherID: number) => {
@@ -60,6 +65,17 @@ const Home = () => {
                   hasRedeemed
                   voucherID={voucher.voucher_id}
                   onClick={() => openModal(voucher.voucher_id)}
+                />
+              ))
+            : arr.map(() => <VoucherCardSkeleton />)}
+
+          {noCodeVouchers?.data
+            ? noCodeVouchers.data?.map((voucher) => (
+                <VoucherCard
+                  isRedeemable={false}
+                  hasRedeemed
+                  voucherID={voucher.uuid}
+                  onClick={() => openModal(voucher.uuid)}
                 />
               ))
             : arr.map(() => <VoucherCardSkeleton />)}
