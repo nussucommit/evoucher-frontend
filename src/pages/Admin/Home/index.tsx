@@ -60,6 +60,7 @@ interface Values {
   codeList: string;
   emailList: string;
   manualCodeInputs: CodeEmailInput[];
+  counter: number;
 }
 
 const initialValues: Values = {
@@ -78,6 +79,7 @@ const initialValues: Values = {
   codeList: "",
   emailList: "",
   manualCodeInputs: [{ key: "", value: "" }],
+  counter: 0, 
 };
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -114,6 +116,7 @@ const validationSchema: yup.SchemaOf<Values> = yup.object({
   codeList: yup.string().default(""),
   emailList: yup.string().default(""),
   manualCodeInputs: yup.array(),
+  counter: yup.number().default(0),
 });
 
 enum types {
@@ -136,6 +139,7 @@ const Home = () => {
     page: page.toString(),
     page_size: perPage.toString(),
   });
+
   const { searchProps, filteredData: data } = useSearch(
     vouchers.results as AdminVoucher[],
     "name"
@@ -211,6 +215,7 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
+
     const data = {
       posted_date: formatLongDate(new Date().toString()),
       available_date: formatLongDate(values.availableDate),
@@ -221,10 +226,9 @@ const Home = () => {
         ? parseFaculties(FACULTY_OPTIONS)
         : parseFaculties(values.eligibleFaculties),
       description: values.description,
-      counter: 0, // To-do
+      counter: values.type.value === "Dinamically allocated" ? values.counter : 0, //-1 returns error for number
       organization: organization?.name,
     };
-    console.log(data);
 
     const files: { [key: string]: any } = {};
     if (!isSameFileUrl(selected?.image, values.image)) {
@@ -243,6 +247,7 @@ const Home = () => {
         await uploadCodeList(selected!.uuid, {
           code_list: values.codeList,
         });
+        await revalidate();
       }
       if (values.emailList) {
         uploadEmailList(selected!.uuid, {
@@ -368,6 +373,7 @@ const AdminVoucherModal = ({
         codeList: "",
         emailList: "",
         manualCodeInputs: [{ key: "", value: "" }],
+        counter: voucher?.counter || 0,
       });
       setIsUploadDisabled(voucher?.voucher_type === "No code");
     }

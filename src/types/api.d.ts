@@ -22,7 +22,7 @@ interface Voucher {
 interface CodeByEmail {
   id: number;
   voucher_id: number;
-  code_id: number;
+  code_id: string;
   email_id: number;
 }
 
@@ -34,7 +34,7 @@ interface CodeEmailInput {
 interface DynamicCode {
   id: string;
   uuid: number;
-  code_id: number;
+  code_id: string;
 }
 
 interface NoCodeVoucher {
@@ -64,6 +64,7 @@ interface AdminVoucher extends AdminVoucherFiles {
   image: string;
   code_uploaded?: boolean;
   organization: string;
+  counter: number;
 }
 
 type PostAdminVoucher = Omit<AdminVoucher, "uuid" | AdminVoucherFiles>;
