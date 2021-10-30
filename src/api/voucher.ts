@@ -69,6 +69,12 @@ export const editVoucher = (
   return request.patch(`/voucher/${uuid}`, formData);
 };
 
+export const deleteVoucher = (
+  voucherID?: string,
+) => {
+  return request.delete(`/voucher/${voucherID}`);
+}
+
 export const uploadCodeList = (
   uuid: string,
   files: Omit<AdminVoucherFiles, "image" | "email_list"> = {}
