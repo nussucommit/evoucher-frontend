@@ -355,7 +355,7 @@ const ConfirmationModal = ({ voucher, open, onClose, responseHandler }: Confirma
       title="Confirm Deletion"
       isOpen={Boolean(open)}
       onClose={onClose}>
-      Are you sure you wanted to delete this voucher?
+      Are you sure you want to delete this voucher?
       <>
         <div className={styles.buttonRow}>
           <Button className={styles.left} onClick={handleYes}>Yes</Button>
