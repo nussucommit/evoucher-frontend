@@ -12,6 +12,7 @@ import {
   uploadCodeList,
   uploadEmailList,
   uploadManualCodes,
+  deleteVoucher,
 } from "api/voucher";
 import usePagination from "hooks/usePagination";
 import { FACULTY_OPTIONS, VOUCHER_TYPE_OPTIONS } from "constants/options";
@@ -79,7 +80,7 @@ const initialValues: Values = {
   codeList: "",
   emailList: "",
   manualCodeInputs: [{ key: "", value: "" }],
-  counter: 0, 
+  counter: 0,
 };
 
 const validationSchema: yup.SchemaOf<Values> = yup.object({
@@ -129,7 +130,10 @@ const Home = () => {
   const { data: organization } = useOrganization(user?.username);
   const [selected, setSelected] = useState<AdminVoucher>();
   const [open, setOpen] = useState<types | null>(null);
-  const closeModal = () => setOpen(null);
+  const closeModal = () => {
+    revalidate();
+    setOpen(null);
+  }
   const { page, setPage, setPerPage, perPage } = usePagination();
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
@@ -263,6 +267,12 @@ const Home = () => {
     formikHelpers.resetForm();
   };
 
+  const handleDelete = async (uuid?: string) => {
+    await deleteVoucher(uuid);
+    closeModal();
+    await revalidate();
+  }
+
   return (
     <>
       <div className={styles.screen}>
@@ -311,6 +321,7 @@ const Home = () => {
             voucher={selected}
             type={open}
             onClose={closeModal}
+            onDelete={handleDelete}
           />
         </Form>
       </Formik>
@@ -321,14 +332,48 @@ const Home = () => {
 type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
   voucher?: AdminVoucher;
   type?: types | null;
+  onDelete: (uuid?: string) => void;
 };
+
+type ConfirmationModalProps = Omit<ModalProps, "children" | "isOpen"> & {
+  voucher?: AdminVoucher;
+  open?: boolean;
+  responseHandler: (response: boolean) => void
+}
+
+// assumption: users will only see this dialog when the user clicks the table row and click the delete button,
+// in that order.
+const ConfirmationModal = ({ voucher, open, onClose, responseHandler }: ConfirmationModalProps) => {
+  const handleYes = () => {
+    responseHandler(true);
+  }
+  const handleNo = () => {
+    responseHandler(false);
+  }
+  return (
+    <Modal
+      title="Confirm Deletion"
+      isOpen={Boolean(open)}
+      onClose={onClose}>
+      Are you sure you wanted to delete this voucher?
+      <>
+        <div className={styles.buttonRow}>
+          <Button className={styles.left} onClick={handleYes}>Yes</Button>
+          <Button onClick={handleNo}>No</Button>
+        </div>
+      </>
+    </Modal>
+  )
+}
 
 const AdminVoucherModal = ({
   voucher,
   type,
   onClose,
+  onDelete,
 }: AdminVoucherModalProps) => {
   const [isUploadDisabled, setIsUploadDisabled] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const {
     setValues,
     submitForm,
@@ -354,6 +399,13 @@ const AdminVoucherModal = ({
       eligibleTypes.includes((option.value as string) || "")
     );
   };
+
+  const closeBothDialog = (response: boolean) => {
+    setOpenConfirmation(false);
+    if (response) {
+      onDelete(voucher?.uuid);
+    }
+  }
 
   // Initializes the values when editing a voucher
   useEffect(() => {
@@ -495,9 +547,28 @@ const AdminVoucherModal = ({
         />
       )}
 
-      <Button className={styles.submit} onClick={submitForm}>
-        Submit
-      </Button>
+      <>
+        <div className={styles.buttonRow}>
+          <Button
+            onClick={submitForm}
+            className={styles.left}>
+            Submit
+          </Button>
+
+          <Button
+            className={styles.danger}
+            disabled={isAdd}
+            onClick={() => setOpenConfirmation(true)}>
+            Delete
+          </Button>
+        </div>
+      </>
+      <ConfirmationModal
+        voucher={voucher}
+        open={openConfirmation}
+        onClose={() => setOpenConfirmation(false)}
+        responseHandler={closeBothDialog}
+      />
     </Modal>
   );
 };

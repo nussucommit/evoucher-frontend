@@ -40,3 +40,18 @@
 .submit {
   margin-top: var(--spacing-2xl);
 }
+
+.danger {
+  background-color: red;
+}
+
+.buttonRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: var(--spacing-2xl);
+
+  .left{
+    margin-right: 16px;
+  }
+}
