@@ -32,6 +32,7 @@ import {
   facultiesToOptions,
   parseFaculties,
 } from "utils/faculty";
+import useRequestState, { RequestState } from "hooks/useRequestState";
 
 // To-do: Divide Table into two components, UI in commit-design and functionality in local /components
 import { Table } from "@commitUI";
@@ -128,12 +129,13 @@ enum types {
 const Home = () => {
   const { data: user } = useUser();
   const { data: organization } = useOrganization(user?.username);
+  const state = useRequestState();
   const [selected, setSelected] = useState<AdminVoucher>();
   const [open, setOpen] = useState<types | null>(null);
   const closeModal = () => {
     revalidate();
     setOpen(null);
-  }
+  };
   const { page, setPage, setPerPage, perPage } = usePagination();
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
@@ -219,6 +221,7 @@ const Home = () => {
     values: Values,
     formikHelpers: FormikHelpers<Values>
   ) => {
+    state.start();
 
     const data = {
       posted_date: formatLongDate(new Date().toString()),
@@ -230,7 +233,8 @@ const Home = () => {
         ? parseFaculties(FACULTY_OPTIONS)
         : parseFaculties(values.eligibleFaculties),
       description: values.description,
-      counter: values.type.value === "Dinamically allocated" ? values.counter : 0, //-1 returns error for number
+      counter:
+        values.type.value === "Dinamically allocated" ? values.counter : 0, //-1 returns error for number
       organization: organization?.name,
     };
 
@@ -262,16 +266,18 @@ const Home = () => {
         uploadManualCodes(selected!.uuid, values.manualCodeInputs);
       }
     }
-
+    state.end();
     closeModal();
     formikHelpers.resetForm();
   };
 
   const handleDelete = async (uuid?: string) => {
+    state.start();
     await deleteVoucher(uuid);
     closeModal();
     await revalidate();
-  }
+    state.end();
+  };
 
   return (
     <>
@@ -318,6 +324,7 @@ const Home = () => {
       >
         <Form>
           <AdminVoucherModal
+            state={state}
             voucher={selected}
             type={open}
             onClose={closeModal}
@@ -330,6 +337,7 @@ const Home = () => {
 };
 
 type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
+  state?: RequestState;
   voucher?: AdminVoucher;
   type?: types | null;
   onDelete: (uuid?: string) => void;
@@ -338,35 +346,40 @@ type AdminVoucherModalProps = Omit<ModalProps, "children" | "isOpen"> & {
 type ConfirmationModalProps = Omit<ModalProps, "children" | "isOpen"> & {
   voucher?: AdminVoucher;
   open?: boolean;
-  responseHandler: (response: boolean) => void
-}
+  responseHandler: (response: boolean) => void;
+};
 
 // assumption: users will only see this dialog when the user clicks the table row and click the delete button,
 // in that order.
-const ConfirmationModal = ({ voucher, open, onClose, responseHandler }: ConfirmationModalProps) => {
+const ConfirmationModal = ({
+  voucher,
+  open,
+  onClose,
+  responseHandler,
+}: ConfirmationModalProps) => {
   const handleYes = () => {
     responseHandler(true);
-  }
+  };
   const handleNo = () => {
     responseHandler(false);
-  }
+  };
   return (
-    <Modal
-      title="Confirm Deletion"
-      isOpen={Boolean(open)}
-      onClose={onClose}>
+    <Modal title="Confirm Deletion" isOpen={Boolean(open)} onClose={onClose}>
       Are you sure you want to delete this voucher?
       <>
         <div className={styles.buttonRow}>
-          <Button className={styles.left} onClick={handleYes}>Yes</Button>
+          <Button type="danger" className={styles.left} onClick={handleYes}>
+            Yes
+          </Button>
           <Button onClick={handleNo}>No</Button>
         </div>
       </>
     </Modal>
-  )
-}
+  );
+};
 
 const AdminVoucherModal = ({
+  state,
   voucher,
   type,
   onClose,
@@ -405,7 +418,7 @@ const AdminVoucherModal = ({
     if (response) {
       onDelete(voucher?.uuid);
     }
-  }
+  };
 
   // Initializes the values when editing a voucher
   useEffect(() => {
@@ -550,15 +563,20 @@ const AdminVoucherModal = ({
       <>
         <div className={styles.buttonRow}>
           <Button
+            disabled={state?.loading}
+            isLoading={state?.loading}
             onClick={submitForm}
-            className={styles.left}>
+            className={styles.left}
+          >
             Submit
           </Button>
 
           <Button
-            className={styles.danger}
-            disabled={isAdd}
-            onClick={() => setOpenConfirmation(true)}>
+            type="danger"
+            isLoading={state?.loading}
+            disabled={isAdd || state?.loading}
+            onClick={() => setOpenConfirmation(true)}
+          >
             Delete
           </Button>
         </div>

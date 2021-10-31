@@ -65,4 +65,9 @@
   pointer-events: none;
   opacity: 0.5;
 }
+
+.error {
+  color: var(--danger);
+  margin-top: var(--spacing-2xs);
+}
 /*# sourceMappingURL=FileUpload.module.css.map */
