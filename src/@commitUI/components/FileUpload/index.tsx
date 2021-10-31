@@ -126,6 +126,11 @@ export const FileUpload = ({
           </Button>
         ) : null}
       </div>
+      {Boolean(error) && (
+        <Text size="xs" semibold className={styles.error}>
+          {error}
+        </Text>
+      )}
     </div>
   );
 };
