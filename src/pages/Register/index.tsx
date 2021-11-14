@@ -43,7 +43,13 @@ const Register = () => {
   const validationSchema: yup.SchemaOf<Values> = yup
     .object({
       name: yup.string().required("Required"),
-      nusnetID: yup.string().required("Required"),
+      nusnetID: yup
+        .string()
+        .required("Required")
+        .test({
+          message: "NUSNET ID can only start with an E",
+          test: (value) => Boolean(value) && value!.startsWith("E"),
+        }),
       year: yup
         .object()
         .shape({
@@ -74,7 +80,7 @@ const Register = () => {
     state.start();
     try {
       register({
-        username: values.nusnetID,
+        username: values.nusnetID.toLowerCase(),
         password: values.password,
         name: values.name,
         year: values.year?.value as number,
