@@ -48,7 +48,8 @@ const Register = () => {
         .required("Required")
         .test({
           message: "NUSNET ID can only start with an E",
-          test: (value) => Boolean(value) && value!.startsWith("E"),
+          test: (value) =>
+            Boolean(value) && value!.toLowerCase().startsWith("e"),
         }),
       year: yup
         .object()
