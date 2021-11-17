@@ -50,6 +50,14 @@ const Register = () => {
           message: "NUSNET ID can only start with an E",
           test: (value) =>
             Boolean(value) && value!.toLowerCase().startsWith("e"),
+        })
+        .test({
+          message: "NUSNET ID cannot contain special characters",
+          test: (value) => Boolean(value) && !/[^a-zA-Z0-9]/.test(value || ""),
+        })
+        .test({
+          message: "Maximum length exceeded",
+          test: (value) => Boolean(value) && value!.toString().length <= 8,
         }),
       year: yup
         .object()
