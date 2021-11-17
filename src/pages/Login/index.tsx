@@ -42,7 +42,7 @@ const Login = () => {
     try {
       state.start();
       const { data: token } = await login({
-        username: values.nusnet,
+        username: values.nusnet.toLowerCase(),
         password: values.password,
       });
       localLogin(token);
