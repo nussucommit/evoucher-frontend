@@ -14,11 +14,11 @@ export const useVouchers = (
 export const useNoCodeVouchers = (
   email: string,
   config?: Config<{ data: NoCodeVoucher[] }>
-) => 
+) =>
   useRequest<{ data: NoCodeVoucher[] }>(
-    { method: "GET", url: `voucher/getNoCodeVoucher/${email}/`},
+    { method: "GET", url: `voucher/getNoCodeVoucher/${email}/` },
     config
-);
+  );
 
 export const useDynamicVouchers = (
   email: string,
@@ -69,11 +69,9 @@ export const editVoucher = (
   return request.patch(`/voucher/${uuid}`, formData);
 };
 
-export const deleteVoucher = (
-  voucherID?: string,
-) => {
+export const deleteVoucher = (voucherID?: string) => {
   return request.delete(`/voucher/${voucherID}`);
-}
+};
 
 export const uploadCodeList = (
   uuid: string,
@@ -112,7 +110,7 @@ export const uploadManualCodes = (uuid: string, data: CodeEmailInput[]) => {
 
   formData.append("uuid", uuid);
   data.forEach(({ key, value }) => {
-    formData.append(key, value.toString());
+    formData.append(key, value.toString().toLowerCase());
   });
 
   return request.post("voucher/codes/manual", formData);
