@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Formik, Form, FormikHelpers, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Column } from "react-table";
+import { useToast } from "@chakra-ui/toast"
 
 import { useUser } from "api/user";
 import { Routes } from "constants/routes";
@@ -136,6 +137,7 @@ const Home = () => {
     revalidate();
     setOpen(null);
   };
+  const toast = useToast()
   const { page, setPage, setPerPage, perPage } = usePagination();
   const {
     data: vouchers = { count: 0, next: "", previous: "", results: [] },
@@ -172,6 +174,21 @@ const Home = () => {
     const closeEventListener = focusElementWithHotkey("#search", "/");
     return closeEventListener;
   });
+
+  const generateToast = (open: types | null) => {
+    const isSuccess = open === types.ADD || open === types.EDIT;
+    toast({
+      title:
+        "Voucher" + isSuccess
+          ? " successfully " + open + "ed"
+          : " update failed",
+      description: "",
+      status: isSuccess ? "success" : "error",
+      duration: 5000,
+      position: "bottom-left",
+      isClosable: true,
+    });
+  };
 
   const columns = React.useMemo<Column<AdminVoucher>[]>(
     () => [
@@ -268,6 +285,7 @@ const Home = () => {
     }
     state.end();
     closeModal();
+    generateToast(open);
     formikHelpers.resetForm();
   };
 
